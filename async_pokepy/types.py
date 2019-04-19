@@ -19,6 +19,12 @@ class _BaseObject:
     def __getitem__(self, item):
         return self._data.get(item)
 
+    def __eq__(self, other):
+        return isinstance(other, _BaseObject) and other.id == self.id
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def to_dict(self):
         return self._data
 

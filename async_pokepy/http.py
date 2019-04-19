@@ -32,7 +32,7 @@ class HTTPPokemonClient:
                 data = await r.json() if "application/json" in r.headers["Content-Type"] else await r.text()
 
                 if 300 > r.status >= 200:
-                    log.info("{0} {1} succeed".format(method, url))
+                    log.info("{0} {1} succeeded".format(method, url))
                     return data
 
                 if r.status == 429:
@@ -57,6 +57,10 @@ class HTTPPokemonClient:
 
     async def connect(self):
         self._session = aiohttp.ClientSession(headers=self.headers, loop=self.loop)
+
+    async def close(self):
+        await self._session.close()
+        del self
 
     async def download_sprite(self, url):
         async with self._session.get(url) as resp:

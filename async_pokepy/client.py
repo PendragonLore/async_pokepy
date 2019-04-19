@@ -27,7 +27,7 @@ class Client:
 
     async def close(self):
         self.clear()
-        await self._http._session.close()
+        await self._http.close()
         del self
 
     def _add_to_cache(self, which: str, obj: Union[Pokemon, Ability, Move]):
