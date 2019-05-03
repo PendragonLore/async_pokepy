@@ -69,7 +69,7 @@ class HTTPPokemonClient:
             elif resp.status == 404:
                 raise NotFound(resp, "Sprite not found.")
             elif resp.status == 403:
-                raise Forbidden(resp, "Cannot retrieve asset.")
+                raise Forbidden(resp, "Cannot retrieve sprite.")
             else:
                 raise PokeAPIException(resp, "Failed to get sprite.")
 
