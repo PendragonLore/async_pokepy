@@ -37,7 +37,7 @@ class Client:
     def _format(self, thing: str) -> str:
         if thing.lower() in ("oh-ho", "porygon-z"):
             return thing.capitalize()
-        return thing.replace("-", " ").capitalize()
+        return thing.replace("-", " ").title()
 
     def _format_tuple(self, r, thing: str, full_thing: str) -> tuple:
         return tuple(self._format(t.get(thing).get("name")) for t in reversed(r.get(full_thing)))
