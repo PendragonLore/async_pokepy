@@ -27,7 +27,6 @@ DEALINGS IN THE SOFTWARE.
 
 class PokemonException(Exception):
     """The base exception for this wrapper."""
-    pass
 
 
 class PokeAPIException(PokemonException):

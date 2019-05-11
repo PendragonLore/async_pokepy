@@ -108,9 +108,9 @@ class Client:
         if cache_check is not None:
             return cache_check
 
-        r = await self._http.get_pokemon(name)
+        data = await self._http.get_pokemon(name)
 
-        ret = Pokemon(r)
+        ret = Pokemon(data)
         self._add_to_cache("pokemon", ret)
 
         return ret

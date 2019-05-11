@@ -34,7 +34,7 @@ import aiohttp
 from .exceptions import PokeAPIException, RateLimited, NotFound, Forbidden
 from .utils import _fmt_param
 
-log = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 
 
 class HTTPPokemonClient:
@@ -55,34 +55,35 @@ class HTTPPokemonClient:
 
         async with self._lock:
             for tries in range(5):
-                async with self._session.get(url, **params) as r:
-                    log.info("{0} {1} returned {2} status code".format(r.method, r.url, r.status))
+                async with self._session.get(url, **params) as resp:
+                    LOG.info("%s %s returned %d status code", resp.method, resp.url, resp.status)
 
-                    data = await r.json() if "application/json" in r.headers["Content-Type"] else await r.text()
+                    data = (await resp.json() if "application/json" in resp.headers["Content-Type"]
+                            else await resp.text())
 
-                    if 300 > r.status >= 200:
-                        log.info("{0} {1} succeeded".format(r.method, r.url))
+                    if 300 > resp.status >= 200:
+                        LOG.info("%s %s succeeded", resp.method, resp.url)
                         return data
 
-                    if r.status == 429:
-                        log.error("Surpassed 100 API requests in one minute")
-                        raise RateLimited(r, "Surpassed 100 API requests in one minute.")
+                    if resp.status == 429:
+                        LOG.error("Surpassed 100 API requests in one minute")
+                        raise RateLimited(resp, "Surpassed 100 API requests in one minute.")
 
-                    if r.status in {500, 502}:
+                    if resp.status in {500, 502}:
                         sleep_time = 1 + tries * 2
-                        log.warning("Internal API error, retrying in {0}".format(sleep_time))
+                        LOG.warning("Internal API error, retrying in %d", sleep_time)
                         await asyncio.sleep(sleep_time, loop=self.loop)
                         continue
 
-                    if r.status == 403:
-                        raise Forbidden(r, "You can't access this endpoint.")
-                    if r.status == 404:
-                        raise NotFound(r, "This endpoint was not found.")
+                    if resp.status == 403:
+                        raise Forbidden(resp, "You can't access this endpoint.")
+                    if resp.status == 404:
+                        raise NotFound(resp, "This endpoint was not found.")
 
-                    raise PokeAPIException(r, "Uncaught status code.")
+                    raise PokeAPIException(resp, "Uncaught status code.")
 
-            log.critical("Out of requests tries.")
-            raise PokeAPIException(r, "Out of tries.")
+            LOG.critical("Out of requests tries.")
+            raise PokeAPIException(resp, "Out of tries.")
 
     async def connect(self):
         self._session = aiohttp.ClientSession(headers=self.headers, loop=self.loop)
@@ -99,8 +100,8 @@ class HTTPPokemonClient:
                 raise NotFound(resp, "Sprite not found.")
             if resp.status == 403:
                 raise Forbidden(resp, "Cannot retrieve sprite.")
-            else:
-                raise PokeAPIException(resp, "Failed to get sprite.")
+
+            raise PokeAPIException(resp, "Failed to get sprite.")
 
     def get_pokemon(self, name: str) -> typing.Coroutine:
         return self.request("/pokemon/{0}".format(_fmt_param(name)))
