@@ -1,0 +1,29 @@
+stages:
+  - build
+  - deploy
+
+before_script:
+  - pip3.7 install -r devreq.txt
+
+poke_build:
+  stage: build
+  script:
+    - pytest -vs
+    - flake8 .
+    - pylint -j "$(nproc)" async_pokepy
+    - python3.7 setup.py sdist bdist_egg bdist_wheel
+    - rm -rf async_pokepy
+    - cd docs && make html
+
+deploy:
+  stage: deploy
+  before_script:
+    - pip install -U twine
+    - ls dist
+    - export TWINE_USERNAME="$(echo -e $TWINE_USERNAME)"
+    - export TWINE_PASSWORD="$(echo -e $TWINE_PASSWORD)"
+  script:
+    - twine upload dist/*
+  artifacts:
+    paths:
+      - dist

@@ -1,0 +1,21 @@
+[flake8]
+ignore = F403,
+	     F405
+max-line-length = 120
+exclude = .git,
+          .cache,
+          .github,
+          .idea,
+          .vscode,
+          __pycache__,
+          .env,
+          .venv,
+          env,
+          venv,
+          env.bak,
+          venv.bak,
+          .DS_Store,
+          .python-version,
+          .tox,
+          build,
+          dist,

@@ -1,116 +1,91 @@
 # -*- coding: utf-8 -*-
 
 from .http import HTTPPokemonClient
-from .types import Pokemon, Sprite, Move, Ability
+from .types import *
+from .utils import _fmt_param
 from typing import Union
 
 
 class Client:
+    """The client representing a connection with the API.
+
+    You must use :meth:`~Client.connect` to initiate the class.
+
+    Attributes
+    ----------
+    loop: :class:`asyncio.AbstractEventLoop`
+        The event loop used for HTTP requests.
+    """
+    __slots__ = ("_http", "loop", "_cache_pokemon")
+
     def __init__(self, http_client: HTTPPokemonClient):
         self._http = http_client
         self.loop = http_client.loop
 
-        self.pokemons = {}
-        self.moves = {}
-        self.abilitys = {}  # this "typo" makes it easier to access the cache
+        self.clear()
 
     @classmethod
     async def connect(cls, *, loop=None):
+        """Connect to the PokeAPI.
+
+        You **must** use this classmethod to connect.
+
+        Parameters
+        ----------
+        loop: Optional[:class:`asyncio.AbstractEventLoop`]
+            The event loop used for HTTP requests, if no loop is provided
+            :func:`asyncio.get_event_loop` is used."""
         http = HTTPPokemonClient(loop)
         await http.connect()
         return cls(http)
 
     def clear(self):
-        self.pokemons = {}
-        self.moves = {}
-        self.abilitys = {}
+        """Clear the cache."""
+        self._cache_pokemon = {}
 
     async def close(self):
+        """Close the connection to the API and clear the cache.
+
+        Use this when cleaning up."""
         self.clear()
-        await self._http._session.close()
+        await self._http.close()
         del self
 
-    def _add_to_cache(self, which: str, obj: Union[Pokemon, Ability, Move]):
-        cache = getattr(self, which + "s", None)
-        cache[obj.name] = obj
-
-    def _format(self, thing: str) -> str:
-        if thing.lower() in ("oh-ho", "porygon-z"):
-            return thing.capitalize()
-        return thing.replace("-", " ").capitalize()
-
-    def _format_tuple(self, r, thing: str, full_thing: str) -> tuple:
-        return tuple(self._format(t.get(thing).get("name")) for t in reversed(r.get(full_thing)))
+    def _add_to_cache(self, which: str, obj: Union[Pokemon]):
+        cache = getattr(self, "_cache_" + which)
+        cache[_fmt_param(obj.name)] = obj
 
     async def get_pokemon(self, name: str) -> Pokemon:
-        cache_check = self.pokemons.get(self._format(name))
+        """Get a :class:`Pokemon` from the API,
+        at the moment it's not possible to search by :attr:`~Pokemon.id` due to caching issues.
+
+        The Pokémon will be cached.
+
+        Parameters
+        ----------
+        name: :class:`str`
+            The name of the Pokèmon.
+
+        Raises
+        ------
+        PokeAPIException
+            The request failed.
+        NotFound
+            The Pokémon was not found.
+        RateLimited
+            More then 100 requests in one minute.
+
+        Returns
+        -------
+        :class:`Pokemon`
+            The Pokèmon searched for."""
+        cache_check = self._cache_pokemon.get(_fmt_param(name))
         if cache_check is not None:
             return cache_check
 
         r = await self._http.get_pokemon(name)
-        data = dict()
 
-        data["name"] = self._format(r["name"])
-        data["id"] = r["id"]
-        data["weight"] = r["weight"]
-        data["height"] = r["height"]
-        data["stats"] = tuple(s.get("base_stat") for s in reversed(r.get("stats")))
-        data["types"] = self._format_tuple(r, "type", "types")
-        data["moves"] = self._format_tuple(r, "move", "moves")
-        data["abilities"] = self._format_tuple(r, "ability", "abilities")
-        data["held_items"] = self._format_tuple(r, "item", "held_items")
-        data["sprites"] = {k: Sprite(v, self._http) for k, v in r.get("sprites").items()}
-
-        ret = Pokemon(data)
+        ret = Pokemon(r)
         self._add_to_cache("pokemon", ret)
-
-        return ret
-
-    async def get_move(self, name: str) -> Move:
-        cache_check = self.moves.get(self._format(name))
-        if cache_check is not None:
-            return cache_check
-
-        r = await self._http.get_move(name)
-        data = dict()
-
-        data["name"] = self._format(r["name"])
-        data["id"] = r["id"]
-        data["accuracy"] = r["accuracy"]
-        data["effect_chance"] = r["effect_chance"]
-        data["pp"] = r["pp"]
-        data["priority"] = r["priority"]
-        data["power"] = r["power"]
-        data["damage_class"] = self._format(r["damage_class"]["name"])
-        data["type"] = self._format(r["type"]["name"])
-        data["target"] = self._format(r["target"]["name"])
-        data["generation"] = self._format(r["generation"]["name"])
-        data["flavor_text_entries"] = tuple(e["flavor_text"] for e in r["flavor_text_entries"])
-        data["effect"] = tuple(o["effect"] for o in r["effect_entries"])
-        data["short_effect"] = tuple(o["short_effect"] for o in r["effect_entries"])
-
-        ret = Move(data)
-        self._add_to_cache("ability", ret)
-
-        return ret
-
-    async def get_ability(self, name: str):
-        cache_check = self.abilitys.get(self._format(name))
-        if cache_check is not None:
-            return cache_check
-
-        r = await self._http.get_ability(name)
-        data = dict()
-
-        data["name"] = self._format(r["name"])
-        data["id"] = r["id"]
-        data["is_main_series"] = r["is_main_series"]
-        data["effect"] = tuple(o["effect"] for o in r["effect_entries"])
-        data["short_effect"] = tuple(o["short_effect"] for o in r["effect_entries"])
-        data["generation"] = self._format(r["generation"]["name"])
-        data["pokemon"] = tuple(self._format(p["pokemon"]["name"]) for p in r["pokemon"])
-
-        ret = Ability(data)
-        self._add_to_cache("ability", ret)
 
         return ret

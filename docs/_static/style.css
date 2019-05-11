@@ -1,0 +1,149 @@
+/*
+    This is basically the d.py documentation theme + some things I like from the flask one.
+    Thanks to both pallets and Danny (Rapptz) for this theme.
+*/
+
+
+body {
+    font-size: 16px;
+}
+
+div.sphinxsidebar {
+    float: left;
+    font-size: 14px;
+    line-height: 1.5em;
+    margin-left: -100%;
+    width: 220px; /* sidebar width */
+}
+
+div.sphinxsidebarwrapper {
+    font-size: 14px;
+    line-height: 1.5em;
+    padding: 10px 0 10px 10px;
+
+    position: fixed;
+    width: 220px;
+    height: 90%;
+    overflow: hidden;
+}
+
+
+div.sphinxsidebarwrapper:hover {
+    overflow: auto;
+}
+
+div.sphinxsidebar h3,
+div.sphinxsidebar h4 {
+    color: #333;
+    font-size: 24px;
+    font-weight: normal;
+    margin: 0 0 5px 0;
+    padding: 0;
+}
+
+div.sphinxsidebar h4 {
+    font-size: 1.1em;
+}
+
+div.sphinxsidebar h3 a {
+    color: #333;
+}
+
+div.sphinxsidebar p {
+    color: #888;
+}
+
+div.sphinxsidebar p.searchtip {
+    line-height: 1.4em;
+}
+
+div.sphinxsidebar ul {
+    color: #000;
+    margin: 10px 0 20px;
+    padding: 0;
+}
+
+div.sphinxsidebar a {
+    color: #444;
+}
+
+div.sphinxsidebar input {
+    border: 1px solid #ccc;
+    font-family: sans-serif;
+    font-size: 1em;
+    margin-top: 10px;
+}
+
+.container.operations {
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.container.operations::before {
+    content: 'Supported Operations';
+    color: #212224;
+    display: block;
+    padding-bottom: 5px;
+}
+
+.container.operations > dl.describe > dt {
+    background-color: #f8f8f8;
+}
+
+div.important, div.note, div.hint, div.tip {
+    background-color: #eee;
+    border: 1px solid #ccc;
+}
+
+div.attention, div.warning, div.caution, div.seealso {
+    background-color: #fef9e9;
+    border: 1px solid #fbe091;
+}
+
+div.danger, div.error {
+    background-color: #ffe4e4;
+    border: 1px solid #f66;
+}
+
+tt, code {
+    background-color: #ecf0f3;
+    font-family: 'Consolas', 'Menlo', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
+    font-size: 0.95em;
+}
+
+code.descname {
+    font-size: 17px;
+}
+
+tt.xref, a tt, code.xref, a code {
+    font-weight: normal;
+    color: rgba(70, 143, 191, 255);
+}
+
+dl.class {
+    margin-bottom: 50px;
+}
+
+a {
+    color: #2591c4;
+    text-decoration: none;
+    border-bottom: none;
+}
+
+a:hover {
+    color: #0a717a;
+    text-decoration: underline;
+    border-bottom: none;
+}
+
+dl.describe > dt,
+dl.function > dt,
+dl.attribute > dt,
+dl.classmethod > dt,
+dl.method > dt,
+dl.class > dt,
+dl.exception > dt {
+    background-color: #f5f5f5;
+    padding: 1px 10px;
+}

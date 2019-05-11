@@ -1,0 +1,10 @@
+formats: []
+
+build:
+  image: latest
+
+python:
+  extra_requirements:
+    - docs
+  version: 3.6
+  pip_install: true
