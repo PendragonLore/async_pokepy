@@ -17,7 +17,7 @@ extra = {
     "docs": [
         "sphinx",
         "sphinxcontrib.napoleon",
-        "sphinxcontrib.asyncio",
+        "sphinxcontrib-asyncio",
         "pallets_sphinx_themes"
     ]
 }
