@@ -32,7 +32,7 @@ setup(name="async_pokepy",
       include_package_data=True,
       license="MIT",
       extras_require=extra,
-      packages=["async_pokepy"],
+      packages=["async_pokepy", "async_pokepy.types"],
       classifiers=[
           "Programming Language :: Python :: 3.6",
           "Programming Language :: Python :: 3.7",
