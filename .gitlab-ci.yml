@@ -14,9 +14,7 @@ poke_build:
     - flake8 .
     - pylint -j "$(nproc)" async_pokepy
     - python3.7 setup.py sdist bdist_egg bdist_wheel
-    - pip3.7 install .
     - rm -rf async_pokepy
-    - pytest -vs
     - cd docs && make html
   retry: 1
   when: always
@@ -24,7 +22,7 @@ poke_build:
 deploy:
   stage: deploy
   before_script:
-    - pip install -U twine
+    - pip3.7 install -U twine
     - ls dist
     - export TWINE_USERNAME="$(echo -e $TWINE_USERNAME)"
     - export TWINE_PASSWORD="$(echo -e $TWINE_PASSWORD)"
