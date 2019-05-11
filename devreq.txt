@@ -3,3 +3,7 @@ pylint
 flake8
 pytest
 pytest-cov
+sphinx
+sphinxcontrib.napoleon
+sphinxcontrib-asyncio
+pallets_sphinx_themes
