@@ -24,6 +24,7 @@ extra = {
 
 setup(name="async_pokepy",
       version=version,
+      description="A simple asynchronous wrapper for the PokeAPI.co API.",
       long_description=long_description,
       long_description_content_type="text/markdown",
       url="https://github.com/PendragonLore/async_pokepy",
