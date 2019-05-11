@@ -10,7 +10,7 @@ poke_build:
   image: python:3.7-alpine
   stage: build
   script:
-    - pytest -vs
+    - PYTHONPATH="$(pwd)" pytest -vs --cov=async_pokepy --cov-report term-missing:skip-covered
     - flake8 .
     - pylint -j "$(nproc)" async_pokepy
     - python3.7 setup.py sdist bdist_egg bdist_wheel
