@@ -15,5 +15,5 @@ __copyright__ = 'Copyright 2019 Lorenzo'
 __version__ = '0.0.7a'
 
 from .client import Client
-from .types import *
 from .exceptions import *
+from .types import *

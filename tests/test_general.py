@@ -1,6 +1,7 @@
 import asyncio
-import pytest
 import functools
+
+import pytest
 
 from async_pokepy import Client, NotFound, Pokemon
 

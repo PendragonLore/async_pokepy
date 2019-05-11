@@ -27,11 +27,11 @@ DEALINGS IN THE SOFTWARE.
 import asyncio
 import logging
 import sys
-from typing import Union, Coroutine
+from typing import Coroutine, Union
 
 import aiohttp
 
-from .exceptions import PokeAPIException, RateLimited, NotFound, Forbidden
+from .exceptions import Forbidden, NotFound, PokeAPIException, RateLimited
 from .utils import _fmt_param
 
 LOG = logging.getLogger(__name__)
