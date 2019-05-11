@@ -1,10 +1,35 @@
 # -*- coding: utf-8 -*-
 
-import aiohttp
+"""
+The MIT License (MIT)
+
+Copyright (c) 2019 Lorenzo
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+"""
+
 import asyncio
 import logging
-import typing
 import sys
+import typing
+
+import aiohttp
 
 from .exceptions import PokeAPIException, RateLimited, NotFound, Forbidden
 from .utils import _fmt_param
@@ -51,10 +76,10 @@ class HTTPPokemonClient:
 
                     if r.status == 403:
                         raise Forbidden(r, "You can't access this endpoint.")
-                    elif r.status == 404:
+                    if r.status == 404:
                         raise NotFound(r, "This endpoint was not found.")
-                    else:
-                        raise PokeAPIException(r, "Uncaught status code.")
+
+                    raise PokeAPIException(r, "Uncaught status code.")
 
             log.critical("Out of requests tries.")
             raise PokeAPIException(r, "Out of tries.")
@@ -70,9 +95,9 @@ class HTTPPokemonClient:
         async with self._session.get(url) as resp:
             if resp.status == 200:
                 return await resp.read()
-            elif resp.status == 404:
+            if resp.status == 404:
                 raise NotFound(resp, "Sprite not found.")
-            elif resp.status == 403:
+            if resp.status == 403:
                 raise Forbidden(resp, "Cannot retrieve sprite.")
             else:
                 raise PokeAPIException(resp, "Failed to get sprite.")
