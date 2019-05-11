@@ -21,7 +21,8 @@ Client
 
 Abstract base class
 -------------------
-An abstract base class (also known as an :class:`~abc.ABC`) is a class that models can inherit to get their behaviour.
+An abstract base class (also known as an :class:`~abc.ABC`) is a class that
+models can inherit to get their behaviour.
 
 **Abstract base classes cannot be instantiated.**
 

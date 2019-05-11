@@ -27,7 +27,7 @@ DEALINGS IN THE SOFTWARE.
 import asyncio
 import logging
 import sys
-import typing
+from typing import Union, Coroutine
 
 import aiohttp
 
@@ -50,7 +50,7 @@ class HTTPPokemonClient:
         self._session = None
         self._lock = asyncio.Lock(loop=self.loop)
 
-    async def request(self, url: str, **params) -> typing.Union[str, dict]:
+    async def request(self, url: str, **params) -> Union[str, dict]:
         url = (self.BASE + url)
 
         async with self._lock:
@@ -103,11 +103,11 @@ class HTTPPokemonClient:
 
             raise PokeAPIException(resp, "Failed to get sprite.")
 
-    def get_pokemon(self, name: str) -> typing.Coroutine:
+    def get_pokemon(self, name: str) -> Coroutine:
         return self.request("/pokemon/{0}".format(_fmt_param(name)))
 
-    def get_move(self, name: str) -> typing.Coroutine:
+    def get_move(self, name: str) -> Coroutine:
         return self.request("/move/{0}".format(_fmt_param(name)))
 
-    def get_ability(self, name: str) -> typing.Coroutine:
+    def get_ability(self, name: str) -> Coroutine:
         return self.request("/ability/{0}".format(_fmt_param(name)))

@@ -6,15 +6,19 @@
 Welcome to async_pokepy's documentation!
 ========================================
 
-``async_pokepy`` is an asynchronous library for the `Pokeapi.co API <https://pokeapi.co>`_
-using modern ``async``/``await`` python syntax, handling HTTP status codes and caching.
+``async_pokepy`` is an asynchronous library for the `Pokeapi.co API <https://pokeapi.co>`_.
+
+**Features:**
+- Modern ``async``\/``await`` python syntax
+- HTTP status codes handling
+- Caching resources.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    api
-
+   changelog
 
 
 Indices and tables
