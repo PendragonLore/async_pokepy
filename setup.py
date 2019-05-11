@@ -19,7 +19,7 @@ extra = {
         "sphinxcontrib.napoleon",
         "sphinxcontrib-asyncio",
         "pallets_sphinx_themes"
-    ]
+    ],
 }
 
 setup(name="async_pokepy",

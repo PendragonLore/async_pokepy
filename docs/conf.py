@@ -11,6 +11,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.abspath('..'))
@@ -22,7 +23,11 @@ copyright = '2019, Lorenzo'
 author = 'Lorenzo'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.5a'
+with open('../discord/__init__.py') as f:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
+
+# The full version, including alpha/beta/rc tags.
+release = version
 
 pygments_style = "friendly"
 
