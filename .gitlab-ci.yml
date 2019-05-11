@@ -3,7 +3,7 @@ stages:
   - deploy
 
 before_script:
-  - apt update && apt upgrade && apt install gcc libffi-dev python3-dev build-base
+  - apk add --no-cache --update python3-dev  gcc build-base
   - pip3.7 install -r devreq.txt
 
 poke_build:
