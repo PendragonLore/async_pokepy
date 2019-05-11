@@ -11,7 +11,7 @@ An, in the works, asynchronous wrapper for the [PokeAPI.co API](https://pokeapi.
 You can check out the (failing) pipelines @ [gitlab](https://gitlab.com/PendragonLore/async_pokepy).
 
 ## Documentation
-Available available @ [readthedocs](https://async-pokepy.readthedocs.io/en/latest/).
+The docs are available @ [readthedocs](https://async-pokepy.readthedocs.io/en/latest/).
 
 ## Installing
 The wrapper is available on PyPi, you can install it with:
