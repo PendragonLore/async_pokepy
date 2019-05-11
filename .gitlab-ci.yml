@@ -6,6 +6,7 @@ before_script:
   - pip3.7 install -r devreq.txt
 
 poke_build:
+  image: python:3.7-alpine
   stage: build
   script:
     - pytest -vs

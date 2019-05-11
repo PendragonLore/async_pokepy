@@ -51,6 +51,7 @@ class Client:
         await self._http.close()
         del self
 
+
     def _add_to_cache(self, which: str, obj: Union[Pokemon]):
         cache = getattr(self, "_cache_" + which)
         cache[_fmt_param(obj.name)] = obj
