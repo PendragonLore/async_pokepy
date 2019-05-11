@@ -23,7 +23,7 @@ copyright = '2019, Lorenzo'
 author = 'Lorenzo'
 
 # The full version, including alpha/beta/rc tags
-with open('../discord/__init__.py') as f:
+with open('../async_pokepy/__init__.py') as f:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
 # The full version, including alpha/beta/rc tags.
