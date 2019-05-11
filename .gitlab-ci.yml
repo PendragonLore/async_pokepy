@@ -13,7 +13,8 @@ poke_build:
     - PYTHONPATH="$(pwd)" pytest -vs --cov=async_pokepy --cov-report term-missing:skip-covered
     - flake8 .
     - pylint -j "$(nproc)" async_pokepy
-    - python3.7 setup.py sdist bdist_egg bdist_wheel install
+    - python3.7 setup.py sdist bdist_egg bdist_wheel
+    - pip3.7 install .
     - rm -rf async_pokepy
     - pytest -vs
     - cd docs && make html
