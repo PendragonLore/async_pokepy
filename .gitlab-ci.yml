@@ -3,6 +3,7 @@ stages:
   - deploy
 
 before_script:
+  - apt update && apt upgrade && apt install gcc libffi-dev
   - pip3.7 install -r devreq.txt
 
 poke_build:
@@ -28,3 +29,5 @@ deploy:
   artifacts:
     paths:
       - dist
+  only:
+    - master

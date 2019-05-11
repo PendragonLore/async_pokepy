@@ -2,7 +2,7 @@
 An, in the works, asynchronous wrapper for the [PokeAPI.co API](https://pokeapi.co).
 
 ## Documentation
-Available available @ readthedocs soon:tm:.
+Available available @ [readthedocs](https://async-pokepy.readthedocs.io/en/latest/).
 
 ## Installing
 At the moment you can only install it from git with:<br>
