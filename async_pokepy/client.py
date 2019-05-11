@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .http import HTTPPokemonClient
-from .types import *
+from .types import Pokemon
 from .utils import _fmt_param
 from typing import Union
 
@@ -50,7 +50,6 @@ class Client:
         self.clear()
         await self._http.close()
         del self
-
 
     def _add_to_cache(self, which: str, obj: Union[Pokemon]):
         cache = getattr(self, "_cache_" + which)
