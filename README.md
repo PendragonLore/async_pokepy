@@ -1,12 +1,22 @@
 # async_pokepy
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/async_pokepy.svg)](https://pypi.python.org/pypi/async-pokepy/)
+[![PyPI status](https://img.shields.io/pypi/status/async_pokepy.svg)](https://pypi.python.org/pypi/async_pokepy/)
+[![PyPI license](https://img.shields.io/pypi/l/async_pokepy.svg)](https://github.com/PendragonLore/async_pokepy/blob/master/LICENSE)
+[![Documentation Status](https://readthedocs.org/projects/async-pokepy/badge/?version=latest)](https://async-pokepy.readthedocs.io/en/latest/?badge=latest)
+[![Pipelines Status](https://gitlab.com/PendragonLore/async_pokepy/badges/master/pipeline.svg)](https://gitlab.com/PendragonLore/async_pokepy/pipelines)
+
+
 An, in the works, asynchronous wrapper for the [PokeAPI.co API](https://pokeapi.co).
+
+You can check out the (failing) pipelines @ [gitlab](https://gitlab.com/PendragonLore/async_pokepy).
 
 ## Documentation
 Available available @ [readthedocs](https://async-pokepy.readthedocs.io/en/latest/).
 
 ## Installing
-At the moment you can only install it from git with:<br>
-``pip install git+github.com/PendragonLore/async_pokepy.git``
+The wrapper is available on PyPi, you can install it with:
+
+``pip install async_pokepy``
 
 ## Example
 ```python
@@ -29,4 +39,5 @@ async def main(query):
 loop = asyncio.get_event_loop()
 loop.run_until_complete(main("Snorlax"))
 ```
+
 This will output: "snorlax has the abilities gluttony thick-fat immunity"

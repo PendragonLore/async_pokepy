@@ -40,4 +40,4 @@ deploy:
     paths:
       - dist
   only:
-    - master
+    - tags@PendragonLore/async_pokepy
