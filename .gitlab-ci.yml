@@ -15,6 +15,7 @@ poke_build:
     - pylint -j "$(nproc)" async_pokepy
     - python3.7 setup.py sdist bdist_egg bdist_wheel
     - rm -rf async_pokepy
+    - pytest -vs
     - cd docs && make html
   retry: 1
   when: always
