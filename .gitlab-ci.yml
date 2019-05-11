@@ -3,7 +3,7 @@ stages:
   - deploy
 
 before_script:
-  - apt update && apt upgrade && apt install gcc libffi-dev
+  - apt update && apt upgrade && apt install gcc libffi-dev python3-dev build-base
   - pip3.7 install -r devreq.txt
 
 poke_build:
@@ -16,6 +16,8 @@ poke_build:
     - python3.7 setup.py sdist bdist_egg bdist_wheel
     - rm -rf async_pokepy
     - cd docs && make html
+  retry: 1
+  when: always
 
 deploy:
   stage: deploy
