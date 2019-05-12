@@ -25,8 +25,11 @@ async def test_general():
         await client.get_pokemon("notapokemon")
 
     assert isinstance(await client.get_pokemon("sNorLax"), Pokemon)
-    assert client._cache_pokemon
+    assert isinstance(await client.get_pokemon(143), Pokemon)
+    assert isinstance(await client.get_pokemon("143"), Pokemon)
+
+    assert client.cache_pokemon
 
     await client.close()
 
-    assert not client._cache_pokemon
+    assert not client.cache_pokemon

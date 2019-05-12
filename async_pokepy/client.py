@@ -41,7 +41,7 @@ class Client:
     loop: :class:`asyncio.AbstractEventLoop`
         The event loop used for HTTP requests.
     """
-    __slots__ = ("_http", "loop", "_cache_pokemon")
+    __slots__ = ("_http", "loop", "cache_pokemon")
 
     def __init__(self, http_client: HTTPPokemonClient):
         self._http = http_client
@@ -62,11 +62,12 @@ class Client:
             :func:`asyncio.get_event_loop` is used."""
         http = HTTPPokemonClient(loop)
         await http.connect()
+
         return cls(http)
 
     def clear(self):
         """Clear the cache."""
-        self._cache_pokemon = {}
+        self.cache_pokemon = {}
 
     async def close(self):
         """Close the connection to the API and clear the cache.
@@ -76,20 +77,35 @@ class Client:
         await self._http.close()
         del self
 
-    def _add_to_cache(self, which: str, obj: Union[Pokemon]):
-        cache = getattr(self, "_cache_" + which)
-        cache[_fmt_param(obj.name)] = obj
+    @staticmethod
+    def _add_to_cache(cache: dict, obj: Union[Pokemon]):
+        cache[(_fmt_param(obj.name), obj.id)] = obj
 
-    async def get_pokemon(self, name: str) -> Pokemon:
-        """Get a :class:`Pokemon` from the API,
-        at the moment it's not possible to search by :attr:`~Pokemon.id` due to caching issues.
+    @staticmethod
+    def _get_from_cache(cache: dict, query: Union[int, str]):
+        cache_friendly_name = None
+
+        if isinstance(query, str):
+            if query.isdigit():
+                cache_friendly_name = int(query)
+            else:
+                cache_friendly_name = _fmt_param(query)
+
+        for key, value in cache.items():  # Necessary for searching by both ID and name.
+            if (cache_friendly_name or query) in key:
+                return value
+
+        return None
+
+    async def get_pokemon(self, query: Union[int, str]) -> Pokemon:
+        """Get a :class:`Pokemon` from the API.
 
         The Pokémon will be cached.
 
         Parameters
         ----------
-        name: :class:`str`
-            The name of the Pokèmon.
+        query: Union[:class:`int`, :class:`str`]
+            The name or id of the Pokèmon.
 
         Raises
         ------
@@ -104,13 +120,14 @@ class Client:
         -------
         :class:`Pokemon`
             The Pokèmon searched for."""
-        cache_check = self._cache_pokemon.get(_fmt_param(name))
-        if cache_check is not None:
-            return cache_check
 
-        data = await self._http.get_pokemon(name)
+        check = self._get_from_cache(self.cache_pokemon, query)
+        if check:
+            return check
+
+        data = await self._http.get_pokemon(query)
 
         ret = Pokemon(data)
-        self._add_to_cache("pokemon", ret)
+        self._add_to_cache(self.cache_pokemon, ret)
 
         return ret

@@ -62,16 +62,19 @@ class HTTPPokemonClient:
                             else await resp.text())
 
                     if 300 > resp.status >= 200:
-                        LOG.info("%s %s succeeded", resp.method, resp.url)
+                        LOG.debug("%s %s succeeded with data %s", resp.method, resp.url, data)
+
                         return data
 
                     if resp.status == 429:
                         LOG.error("Surpassed 100 API requests in one minute")
+
                         raise RateLimited(resp, "Surpassed 100 API requests in one minute.")
 
                     if resp.status in {500, 502}:
                         sleep_time = 1 + tries * 2
                         LOG.warning("Internal API error, retrying in %d", sleep_time)
+
                         await asyncio.sleep(sleep_time, loop=self.loop)
                         continue
 
@@ -82,7 +85,7 @@ class HTTPPokemonClient:
 
                     raise PokeAPIException(resp, "Uncaught status code.")
 
-            LOG.critical("Request timed out.")
+            LOG.critical("Request timed out")
             raise PokeAPIException(resp, "Request timed out.")
 
     async def connect(self):
@@ -103,11 +106,11 @@ class HTTPPokemonClient:
 
             raise PokeAPIException(resp, "Failed to get sprite.")
 
-    def get_pokemon(self, name: str) -> Coroutine:
-        return self.request("/pokemon/{0}".format(_fmt_param(name)))
+    def get_pokemon(self, query: Union[int, str]) -> Coroutine:
+        return self.request("/pokemon/{0}".format(_fmt_param(query)))
 
-    def get_move(self, name: str) -> Coroutine:
-        return self.request("/move/{0}".format(_fmt_param(name)))
+    def get_move(self, query: Union[int, str]) -> Coroutine:
+        return self.request("/move/{0}".format(_fmt_param(query)))
 
-    def get_ability(self, name: str) -> Coroutine:
-        return self.request("/ability/{0}".format(_fmt_param(name)))
+    def get_ability(self, query: Union[int, str]) -> Coroutine:
+        return self.request("/ability/{0}".format(_fmt_param(query)))

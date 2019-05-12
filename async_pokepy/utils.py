@@ -24,9 +24,15 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+from typing import Union
+from urllib.parse import quote
 
-def _fmt_param(thing: str) -> str:
-    return "-".join(thing.lower().split())
+
+def _fmt_param(thing: Union[int, str]) -> str:
+    if isinstance(thing, int):
+        return str(thing)
+
+    return quote("-".join(thing.lower().split()), safe="")
 
 
 def _pretty_format(thing: str) -> str:
