@@ -46,7 +46,7 @@ class BaseObject(metaclass=ABCMeta):
     def __init__(self, data: dict):
         self._data = data
 
-        self.id = data["id"]
+        self.id = data["id"]  # pylint: disable=invalid-name
         self.name = data["name"]
 
     def __str__(self) -> str:

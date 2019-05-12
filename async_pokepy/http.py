@@ -76,14 +76,14 @@ class HTTPPokemonClient:
                         continue
 
                     if resp.status == 403:
-                        raise Forbidden(resp, "You can't access this endpoint.")
+                        raise Forbidden(resp, "Forbidden endpoint.")
                     if resp.status == 404:
-                        raise NotFound(resp, "This endpoint was not found.")
+                        raise NotFound(resp, "Endpoint not found.")
 
                     raise PokeAPIException(resp, "Uncaught status code.")
 
-            LOG.critical("Out of requests tries.")
-            raise PokeAPIException(resp, "Out of tries.")
+            LOG.critical("Request timed out.")
+            raise PokeAPIException(resp, "Request timed out.")
 
     async def connect(self):
         self._session = aiohttp.ClientSession(headers=self.headers, loop=self.loop)
