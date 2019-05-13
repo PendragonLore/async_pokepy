@@ -1,6 +1,6 @@
 import asyncio
-import io
 import functools
+import io
 
 import pytest
 

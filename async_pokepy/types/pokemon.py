@@ -24,10 +24,9 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+from ..utils import _pretty_format
 from ._base import BaseObject
 from .other import VersionGameIndex
-
-from ..utils import _pretty_format
 
 
 class Pokemon(BaseObject):
