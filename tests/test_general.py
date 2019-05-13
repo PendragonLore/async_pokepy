@@ -1,4 +1,5 @@
 import asyncio
+import io
 import functools
 
 import pytest
@@ -27,6 +28,14 @@ async def test_general():
     assert isinstance(await client.get_pokemon("sNorLax"), Pokemon)
     assert isinstance(await client.get_pokemon(143), Pokemon)
     assert isinstance(await client.get_pokemon("143"), Pokemon)
+
+    poke = await client.get_pokemon(1)
+
+    assert isinstance(await client.read_sprite(poke.sprites.back_default), bytes)
+
+    ret = io.BytesIO()
+
+    assert isinstance(await client.save_sprite(poke.sprites.back_default, ret), int)
 
     assert client.cache_pokemon
 

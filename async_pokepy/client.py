@@ -24,6 +24,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+import io
 from typing import Union
 
 from .http import HTTPPokemonClient
@@ -50,17 +51,23 @@ class Client:
         self.clear()
 
     @classmethod
-    async def connect(cls, *, loop=None):
+    async def connect(cls, base: str = None, user_agent: str = None, *, loop=None):
         """Connect to the PokeAPI.
 
         You **must** use this classmethod to connect.
 
         Parameters
         ----------
+        base: Optional[:class:`str`]
+            The base to use for all API requests, userful to edit if you
+            want to host your own instance of the API.
+            Defaults to `https://pokeapi.co/api/v2`.
+        user_agent: Optional[:class:`str`]
+            The User-Agent header to use when making requests.
         loop: Optional[:class:`asyncio.AbstractEventLoop`]
             The event loop used for HTTP requests, if no loop is provided
-            :func:`asyncio.get_event_loop` is used."""
-        http = HTTPPokemonClient(loop)
+            :func:`asyncio.get_event_loop` is used to get one."""
+        http = HTTPPokemonClient(loop=loop, user_agent=user_agent, base=base)
         await http.connect()
 
         return cls(http)
@@ -131,3 +138,49 @@ class Client:
         self._add_to_cache(self.cache_pokemon, ret)
 
         return ret
+
+    async def save_sprite(self, url: str, fp, *, seek_begin: bool = True) -> int:
+        """Save a sprite url into a file-like object.
+
+        Parameters
+        ----------
+        url: :class:`str`
+            The image url of the sprite.
+        fp: Union[:class:`io.IOBase`, :class:`os.PathLike`]
+            The file-like object to save the sprite to.
+            This can be both a path to a file or a BinaryIO.
+        seek_begin: :class:`bool`
+            Whether to seek to the beginning of the file after saving is done.
+
+        Returns
+        -------
+        :class:`int`
+            The number of bytes written.
+        """
+        data = await self.read_sprite(url)
+
+        if isinstance(fp, io.IOBase) and fp.writable():
+            written = fp.write(data)
+
+            if seek_begin:
+                fp.seek(0)
+
+            return written
+
+        with open(fp, "wb") as f:
+            return f.write(data)
+
+    async def read_sprite(self, url: str) -> bytes:
+        """Read a sprite url's sprite.
+
+        Parameters
+        ----------
+        url: :class:`str`
+            The image url of the sprite.
+
+        Returns
+        -------
+        :class:`bytes`
+            The bytes read.
+        """
+        return await self._http.download_sprite(url)

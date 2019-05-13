@@ -27,6 +27,8 @@ DEALINGS IN THE SOFTWARE.
 from ._base import BaseObject
 from .other import VersionGameIndex
 
+from ..utils import _pretty_format
+
 
 class Pokemon(BaseObject):
     """Represents a Pokémon object.
@@ -97,7 +99,7 @@ class Pokemon(BaseObject):
         self.order = data["order"]
 
         self.species = data["species"]["name"]
-        self.forms = [d["name"] for d in data["forms"]]
+        self.forms = [_pretty_format(d["name"]) for d in data["forms"]]
 
         self.sprites = PokemonSprites(data["sprites"])
 
@@ -127,7 +129,7 @@ class PokemonStat:
     __slots__ = ("stat", "effort", "base_stat")
 
     def __init__(self, data: dict):
-        self.stat = data["stat"]["name"]
+        self.stat = _pretty_format(data["stat"]["name"])
         self.effort = data["effort"]
         self.base_stat = data["base_stat"]
 
@@ -157,7 +159,7 @@ class PokemonAbility:
     def __init__(self, data: dict):
         self.is_hidden = data["is_hidden"]
         self.slot = data["slot"]
-        self.ability = data["ability"]["name"]
+        self.ability = _pretty_format(data["ability"]["name"])
 
     def __str__(self) -> str:
         return self.ability
@@ -184,7 +186,7 @@ class PokemonType:
     __slots__ = ("type", "slot")
 
     def __init__(self, data: dict):
-        self.type = data["type"]["name"]
+        self.type = _pretty_format(data["type"]["name"])
         self.slot = data["slot"]
 
     def __str__(self) -> str:
@@ -255,7 +257,7 @@ class PokemonMove:
     __slots__ = ("move", "version_group_details")
 
     def __init__(self, data: dict):
-        self.move = data["move"]["name"]
+        self.move = _pretty_format(data["move"]["name"])
         self.version_group_details = [PokemonMoveVersion(d) for d in data["version_group_details"]]
 
     def __str__(self) -> str:
@@ -280,8 +282,8 @@ class PokemonMoveVersion:
 
     def __init__(self, data: dict):
         self.level_learned_at = data["level_learned_at"]
-        self.version_group = data["version_group"]["name"]
-        self.move_learn_method = data["move_learn_method"]["name"]
+        self.version_group = _pretty_format(data["version_group"]["name"])
+        self.move_learn_method = _pretty_format(data["move_learn_method"]["name"])
 
     def __repr__(self) -> str:
         return ("<PokemonMoveVersion move_learn_method='{0.move_learn_method}' level_learned_at={0.level_learned_at}>"
@@ -306,7 +308,7 @@ class PokemonHeldItem:
     __slots__ = ("item", "version_details")
 
     def __init__(self, data: dict):
-        self.item = data["item"]["name"]
+        self.item = _pretty_format(data["item"]["name"])
         self.version_details = [PokemonHeldItemVersion(d) for d in data["version_details"]]
 
     def __str__(self) -> str:
@@ -328,7 +330,7 @@ class PokemonHeldItemVersion:
     __slots__ = ("version", "rarity")
 
     def __init__(self, data: dict):
-        self.version = data["version"]["name"]
+        self.version = _pretty_format(data["version"]["name"])
         self.rarity = data["rarity"]
 
     def __repr__(self) -> str:

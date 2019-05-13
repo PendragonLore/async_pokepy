@@ -27,6 +27,8 @@ DEALINGS IN THE SOFTWARE.
 from abc import ABCMeta, abstractmethod
 from typing import Any
 
+from ..utils import _pretty_format
+
 
 class BaseObject(metaclass=ABCMeta):
     """The abstract base class which all other full objects inherit from.
@@ -47,7 +49,7 @@ class BaseObject(metaclass=ABCMeta):
         self._data = data
 
         self.id = data["id"]  # pylint: disable=invalid-name
-        self.name = data["name"]
+        self.name = _pretty_format(data["name"])
 
     def __str__(self) -> str:
         return self.name
