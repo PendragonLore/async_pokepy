@@ -6,7 +6,7 @@ Changelog
 This page aims to keep an organized view of all of the changes
 since the wrapper's initial release.
 
-0.0.8a
+0.0.9a
 ------
 
 - :meth:`Client.read_sprite` and :meth:`Client.save_sprite`
