@@ -25,5 +25,6 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from ._base import *
-from .other import *
+from .common import *
+from .move import *
 from .pokemon import *

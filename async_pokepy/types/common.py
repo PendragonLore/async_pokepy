@@ -27,7 +27,35 @@ DEALINGS IN THE SOFTWARE.
 from ..utils import _pretty_format
 
 
+class Name:
+    __slots__ = ("name", "language")
+
+    def __init__(self, data: dict):
+        self.name = data["name"]
+        self.language = data["language"]["name"]
+
+    def __str__(self) -> str:
+        return self.name
+
+    def __repr__(self) -> str:
+        return "<Name name='{0.name}' language='{0.language}'>".format(self)
+
+
+class VerboseEffect:
+    __slots__ = ("effect", "short_effect", "language")
+
+    def __init__(self, data: dict):
+        self.effect = data["effect"]
+        self.short_effect = data["short_effect"]
+        self.language = _pretty_format(data["language"]["name"])
+
+    def __repr__(self) -> str:
+        return "<VerboseEffect language='{0.language}'>".format(self)
+
+
 class VersionGameIndex:
+    __slots__ = ("game_index", "version")
+
     """Represents a partial Version object bound to a GameIndex.
 
     Attributes

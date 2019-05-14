@@ -28,7 +28,7 @@ import io
 from typing import Union
 
 from .http import HTTPPokemonClient
-from .types import Pokemon
+from .types import Move, Pokemon
 from .utils import _fmt_param
 
 
@@ -40,9 +40,8 @@ class Client:
     Attributes
     ----------
     loop: :class:`asyncio.AbstractEventLoop`
-        The event loop used for HTTP requests.
-    """
-    __slots__ = ("_http", "loop", "cache_pokemon")
+        The event loop used for HTTP requests."""
+    __slots__ = ("_http", "loop", "cache_pokemon", "cache_move")
 
     def __init__(self, http_client: HTTPPokemonClient):
         self._http = http_client
@@ -75,6 +74,7 @@ class Client:
     def clear(self):
         """Clear the cache."""
         self.cache_pokemon = {}
+        self.cache_move = {}
 
     async def close(self):
         """Close the connection to the API and clear the cache.
@@ -106,6 +106,7 @@ class Client:
 
     async def get_pokemon(self, query: Union[int, str]) -> Pokemon:
         """Get a :class:`Pokemon` from the API.
+        The query can be both the name or the ID as a string or integer.
 
         The Pokémon will be cached.
 
@@ -139,6 +140,42 @@ class Client:
 
         return ret
 
+    async def get_move(self, query: Union[int, str]):
+        """Get a :class:`Move` from the API.
+        The query can be both the name or the ID as a string or integer.
+
+        The move will be cached.
+
+        Parameters
+        ----------
+        query: Union[:class:`int`, :class:`str`]
+            The name or id of the move.
+
+        Raises
+        ------
+        PokeAPIException
+            The request failed.
+        NotFound
+            The move was not found.
+        RateLimited
+            More then 100 requests in one minute.
+
+        Returns
+        -------
+        :class:`Move`
+            The move searched for."""
+
+        check = self._get_from_cache(self.cache_move, query)
+        if check:
+            return check
+
+        data = await self._http.get_move(query)
+
+        ret = Move(data)
+        self._add_to_cache(self.cache_move, ret)
+
+        return ret
+
     async def save_sprite(self, url: str, fp, *, seek_begin: bool = True) -> int:
         """Save a sprite url into a file-like object.
 
@@ -155,8 +192,7 @@ class Client:
         Returns
         -------
         :class:`int`
-            The number of bytes written.
-        """
+            The number of bytes written."""
         data = await self.read_sprite(url)
 
         if isinstance(fp, io.IOBase) and fp.writable():
@@ -181,6 +217,5 @@ class Client:
         Returns
         -------
         :class:`bytes`
-            The bytes read.
-        """
+            The bytes read."""
         return await self._http.download_sprite(url)

@@ -24,18 +24,18 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from abc import ABCMeta, abstractmethod
+import abc
 from typing import Any
 
 from ..utils import _pretty_format
 
 
-class BaseObject(metaclass=ABCMeta):
+class BaseObject(metaclass=abc.ABCMeta):
     """The abstract base class which all other full objects inherit from.
 
     Current list of full objects:
         * :class:`Pokemon`
-        * ...
+        * :class:`Move`
 
     Attributes
     ----------
@@ -58,12 +58,12 @@ class BaseObject(metaclass=ABCMeta):
         return self._data[item]
 
     def __eq__(self, other) -> bool:
-        return isinstance(other, BaseObject) and other.id == self.id
+        return isinstance(other, self.__class__) and self.id == other.id
 
     def __ne__(self, other) -> bool:
         return not self.__eq__(other)
 
-    @abstractmethod
+    @abc.abstractmethod
     def __repr__(self) -> NotImplemented:
         return NotImplemented
 

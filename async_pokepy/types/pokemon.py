@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 
 from ..utils import _pretty_format
 from ._base import BaseObject
-from .other import VersionGameIndex
+from .common import VersionGameIndex
 
 
 class Pokemon(BaseObject):

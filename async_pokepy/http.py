@@ -28,6 +28,7 @@ import asyncio
 import logging
 import sys
 from typing import Coroutine, Union
+from urllib.parse import quote
 
 import aiohttp
 
@@ -38,12 +39,17 @@ LOG = logging.getLogger(__name__)
 
 
 class Route:
-    __slots__ = ("params", "url")
+    __slots__ = ("params", "url", "route")
 
-    def __init__(self, base, path, *args):
-        self.params = [_fmt_param(arg) for arg in args]
+    def __init__(self, base, path, *args, **kwargs):
+        self.route = [_fmt_param(arg) for arg in args]
+        self.params = ["{0}={1}".format(k, quote(str(v))) for k, v in kwargs.items()]
 
-        self.url = (base + path + "/".join(self.params))
+        url = (base + path + "/".join(self.route))
+        if self.params:
+            self.url = url + "?" + "&".join(self.params)
+        else:
+            self.url = url
 
 
 class HTTPPokemonClient:
@@ -51,17 +57,18 @@ class HTTPPokemonClient:
 
     def __init__(self, loop: asyncio.AbstractEventLoop = None, base: str = None, user_agent: str = None):
         self.loop = loop or asyncio.get_event_loop()
+        self._lock = asyncio.Lock(loop=self.loop)
+
+        self.base = base or "https://pokeapi.co/api/v2"
         self.headers = {
             "User-Agent": user_agent or "Python/{0[0]}.{0[1]} aiohttp/{1}".format(sys.version_info, aiohttp.__version__)
         }
         self._session = None
-        self._lock = asyncio.Lock(loop=self.loop)
-        self.base = base or "https://pokeapi.co/api/v2"
 
-    async def request(self, route, **params) -> Union[str, dict]:
+    async def request(self, route, **kwargs) -> Union[str, dict]:
         async with self._lock:
             for tries in range(5):
-                async with self._session.get(route.url, **params) as resp:
+                async with self._session.get(route.url, **kwargs) as resp:
                     LOG.info("%s %s returned %d status code", resp.method, resp.url, resp.status)
 
                     data = (await resp.json() if "application/json" in resp.headers["Content-Type"]
@@ -108,9 +115,9 @@ class HTTPPokemonClient:
             if resp.status == 404:
                 raise NotFound(resp, "Sprite not found.")
             if resp.status == 403:
-                raise Forbidden(resp, "Cannot retrieve sprite.")
+                raise Forbidden(resp, "Cannot retrieve the sprite.")
 
-            raise PokeAPIException(resp, "Failed to get sprite.")
+            raise PokeAPIException(resp, "Failed to get the sprite.")
 
     def get_pokemon(self, query: Union[int, str]) -> Coroutine:
         return self.request(Route(self.base, "/pokemon/", query))
