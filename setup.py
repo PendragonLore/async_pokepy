@@ -59,7 +59,7 @@ setup(author="Lorenzo",
           "Topic :: Software Development :: Libraries",
           "Topic :: Software Development :: Libraries :: Python Modules",
           "Topic :: Utilities",
-          "Framework :: AsyncIO"
+          "Framework :: AsyncIO",
           "Operating System :: OS Independent",
           "Development Status :: 3 - Alpha",
       ],
