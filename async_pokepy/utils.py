@@ -27,6 +27,8 @@ DEALINGS IN THE SOFTWARE.
 from typing import Union
 from urllib.parse import quote
 
+__all__ = ()
+
 
 def _fmt_param(thing: Union[int, str]) -> str:
     if isinstance(thing, int):

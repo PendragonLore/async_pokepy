@@ -6,13 +6,22 @@ This section of the documentation outlines ``async_pokepy``'s API.
 
 Version Related Info
 --------------------
+
 .. data:: __version__
 
     A string representation of the version. e.g. ``'1.0.0rc1'``. This is based
     off of `PEP-440 <https://www.python.org/dev/peps/pep-0440/>`_.
 
+.. data:: version_info
+
+    A :class:`collections.namedtuple` that is similar to :data:`sys.version_info`.
+
+    Just like :data:`sys.version_info` the valid values for releaselevel are
+    ‘alpha’, ‘beta’, ‘candidate’ and ‘final’.
+
 Client
 ------
+
 .. autoclass:: Client()
     :members:
 
@@ -30,6 +39,9 @@ models can inherit to get their behaviour.
     :members:
     :inherited-members:
 
+.. autoclass:: AsyncIterator()
+    :members:
+
 Data Classes
 ------------
 
@@ -45,13 +57,16 @@ Data classes all representing an API object, most of them just store data.
     defined which means that it is impossible to have dynamic attributes to them.
 
 Pokemon
-^^^^^^^
+~~~~~~~
 
 .. autoclass:: Pokemon()
     :members:
     :inherited-members:
 
 .. autoclass:: PokemonMove()
+    :members:
+
+.. autoclass:: PokemonMoveVersion()
     :members:
 
 .. autoclass:: PokemonAbility()
@@ -69,18 +84,51 @@ Pokemon
 .. autoclass:: PokemonHeldItem()
     :members:
 
-Version
-^^^^^^^
-
-.. autoclass:: PokemonMoveVersion()
+.. autoclass:: PokemonHeldItemVersion()
     :members:
 
-.. autoclass:: PokemonHeldItemVersion()
+Move
+~~~~
+
+.. autoclass:: Move()
+    :members:
+    :inherited-members:
+
+.. autoclass:: MoveFlavorText()
+    :members:
+
+.. autoclass:: MoveMetaData()
+    :members:
+
+.. autoclass:: PastMoveStatValues()
+    :members:
+
+.. autoclass:: ContestComboDetail()
+    :members:
+
+.. autoclass:: ContestComboSet()
+    :members:
+
+Common
+~~~~~~
+
+Some common data classes used by the API.
+
+.. autoclass:: Name()
+    :members:
+
+.. autoclass:: VerboseEffect()
     :members:
 
 .. autoclass:: VersionGameIndex()
     :members:
 
+Iterators
+~~~~~~~~~
+
+.. autoclass:: AsyncPaginationIterator()
+    :members:
+    :inherited-members:
 
 Exceptions
 ----------
@@ -94,3 +142,5 @@ Exceptions
 .. autoexception:: Forbidden()
 
 .. autoexception:: RateLimited()
+
+.. autoexception:: NoMoreItems()

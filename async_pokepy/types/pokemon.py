@@ -25,12 +25,24 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from ..utils import _pretty_format
-from ._base import BaseObject
+from .abc import BaseObject
 from .common import VersionGameIndex
+
+__all__ = (
+    "Pokemon",
+    "PokemonStat",
+    "PokemonAbility",
+    "PokemonType",
+    "PokemonSprites",
+    "PokemonMove",
+    "PokemonMoveVersion",
+    "PokemonHeldItem",
+    "PokemonHeldItemVersion"
+)
 
 
 class Pokemon(BaseObject):
-    """Represents a Pokémon object.
+    """Represents a Pokémon object from the API.
 
     .. container:: operations
 
@@ -53,33 +65,33 @@ class Pokemon(BaseObject):
     Attributes
     ----------
     id: :class:`int`
-        The PokeAPI identifier for this Pokémon.
+        The PokeAPI identifier for the Pokémon.
     name: :class:`str`
-        The name for this Pokémon.
+        The name for the Pokémon.
     base_experience: :class:`int`
-        The base experience gained for defeating this Pokémon.
+        The base experience gained for defeating the Pokémon.
     height: :class:`int`
-        The height of this Pokémon, in decimetres.
+        The height of the Pokémon, in decimetres.
     is_default: :class:`bool`
-        ``True`` if this Pokémon is used as the default for each species.
+        ``True`` if the Pokémon is used as the default for each species.
     order: :class:`int`
         Order for sorting. Almost national order, except families are grouped together.
     weight: :class:`id`
-        The weight of this Pokémon, in hectograms.
+        The weight of the Pokémon, in hectograms.
     abilities: List[:class:`PokemonAbility`]
-        A list of :class:`PokemonAbility` this Pokémon could potentially have.
+        A list of :class:`PokemonAbility` the Pokémon could potentially have.
     moves: List[:class:`PokemonMove`]
         A list of moves along with learn methods and level details pertaining to specific version groups.
     forms: List[:class:`str`]
-        A list of forms this Pokémon can take on.
+        A list of forms the Pokémon can take on.
     game_indices: List[:class:`VersionGameIndex`]
         A list of :class:`VersionGameIndex` relevent to Pokémon item by generation.
     stats: List[:class:`PokemonStat`]
-        A list of base stat values for this Pokémon.
+        A list of base stat values for the Pokémon.
     types:  List[:class:`PokemonType`]
-        A list of details showing types this Pokémon has.
+        A list of details showing types the Pokémon has.
     sprites: :class:`PokemonSprites`
-        A set of sprites used to depict this Pokémon in the game.
+        A set of sprites used to depict the Pokémon in the game.
     """
     __slots__ = (
         "stats", "types", "weight", "moves", "abilities", "height",
@@ -114,7 +126,7 @@ class Pokemon(BaseObject):
 
 
 class PokemonStat:
-    """Represents a partial Stat object bound to a :class:`Pokemon`.
+    """Represents a stat of a :class:`Pokemon`.
 
     Attributes
     ----------
@@ -137,7 +149,7 @@ class PokemonStat:
 
 
 class PokemonAbility:
-    """Represents a partial Ability object bound to a :class:`Pokemon`.
+    """Represents an ability of a :class:`Pokemon`.
 
     .. container:: operations
 
@@ -150,9 +162,9 @@ class PokemonAbility:
     ability: :class:`str`
         The ability's name.
     slot: :class:`int`
-        The slot this ability occupies in the Pokémon species.
+        The slot the ability occupies in the Pokémon species.
     is_hidden: :class:`bool`
-        Whether or not this is a hidden ability."""
+        Whether or not the ability is hidden."""
     __slots__ = ("is_hidden", "slot", "ability")
 
     def __init__(self, data: dict):
@@ -168,7 +180,7 @@ class PokemonAbility:
 
 
 class PokemonType:
-    """Represents a partial Type object bound to a :class:`Pokemon`.
+    """Represents a type of a :class:`Pokemon`.
 
     .. container:: operations
 
@@ -238,7 +250,7 @@ class PokemonSprites:
 
 
 class PokemonMove:
-    """Represents a partial Move object bound to a :class:`Pokemon`
+    """Represents a move of a :class:`Pokemon.`
 
     .. container:: operations
 
@@ -267,7 +279,7 @@ class PokemonMove:
 
 
 class PokemonMoveVersion:
-    """Represents a partial Version object bound to a :class:`PokemonMove`.
+    """Represents the version of a :class:`PokemonMove`
 
     Attributes
     ----------
@@ -290,7 +302,7 @@ class PokemonMoveVersion:
 
 
 class PokemonHeldItem:
-    """Represents a partial Item object bound to a :class:`Pokemon`.
+    """Represents an item held by a :class:`Pokemon`.
 
     .. container:: operations
 
@@ -318,7 +330,7 @@ class PokemonHeldItem:
 
 
 class PokemonHeldItemVersion:
-    """Represents a partial Version object bound to a :class:`PokemonHeldItem`.
+    """Represents the version of a :class:`PokemonHeldItem`.
 
     Attributes
     ----------

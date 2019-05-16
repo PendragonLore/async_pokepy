@@ -28,8 +28,10 @@ import io
 from typing import Union
 
 from .http import HTTPPokemonClient
-from .types import Move, Pokemon
+from .types import AsyncPaginationIterator, Move, Pokemon
 from .utils import _fmt_param
+
+__all__ = ("Client",)
 
 
 class Client:
@@ -50,7 +52,7 @@ class Client:
         self.clear()
 
     @classmethod
-    async def connect(cls, base: str = None, user_agent: str = None, *, loop=None):
+    async def connect(cls, **kwargs):
         """Connect to the PokeAPI.
 
         You **must** use this classmethod to connect.
@@ -58,15 +60,16 @@ class Client:
         Parameters
         ----------
         base: Optional[:class:`str`]
-            The base to use for all API requests, userful to edit if you
+            The base to use for all API requests, useful to edit if you
             want to host your own instance of the API.
-            Defaults to `https://pokeapi.co/api/v2`.
+            Defaults to ``https://pokeapi.co/api/v2``.
         user_agent: Optional[:class:`str`]
             The User-Agent header to use when making requests.
         loop: Optional[:class:`asyncio.AbstractEventLoop`]
             The event loop used for HTTP requests, if no loop is provided
             :func:`asyncio.get_event_loop` is used to get one."""
-        http = HTTPPokemonClient(loop=loop, user_agent=user_agent, base=base)
+
+        http = HTTPPokemonClient(**kwargs)
         await http.connect()
 
         return cls(http)
@@ -146,6 +149,8 @@ class Client:
 
         The move will be cached.
 
+        .. versionadded:: 0.1.0a
+
         Parameters
         ----------
         query: Union[:class:`int`, :class:`str`]
@@ -179,6 +184,8 @@ class Client:
     async def save_sprite(self, url: str, fp, *, seek_begin: bool = True) -> int:
         """Save a sprite url into a file-like object.
 
+        .. versionadded:: 0.0.9a
+
         Parameters
         ----------
         url: :class:`str`
@@ -209,6 +216,8 @@ class Client:
     async def read_sprite(self, url: str) -> bytes:
         """Read a sprite url's sprite.
 
+        .. versionadded:: 0.0.9a
+
         Parameters
         ----------
         url: :class:`str`
@@ -219,3 +228,23 @@ class Client:
         :class:`bytes`
             The bytes read."""
         return await self._http.download_sprite(url)
+
+    def get_pagination(self, obj: str, **kwargs) -> AsyncPaginationIterator:
+        """Retuns an async iterator representing a pagination of resources from the API.
+
+        .. versionadded:: 0.1.0a
+
+        Parameters
+        ----------
+        obj: :class:`str`
+            The name of the resource.
+        limit: Optional[:class:`int`]
+            The amount of the resources, defaults to ``20``.
+        offset: Optional[:class:`int`]
+            The start position of the pagination, defaults to ``0``.
+
+        Returns
+        -------
+        :class:`AsyncPaginationIterator`
+            The iterator."""
+        return AsyncPaginationIterator(self._http, obj, **kwargs)

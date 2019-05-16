@@ -37,6 +37,8 @@ from .utils import _fmt_param
 
 LOG = logging.getLogger(__name__)
 
+__all__ = ()
+
 
 class Route:
     __slots__ = ("params", "url", "route")
@@ -127,3 +129,6 @@ class HTTPPokemonClient:
 
     def get_ability(self, query: Union[int, str]) -> Coroutine:
         return self.request(Route(self.base, "/ability/", query))
+
+    def get_pagination(self, query: str, **kwargs) -> Coroutine:
+        return self.request(Route(self.base, "/{0}/".format(_fmt_param(query)), **kwargs))

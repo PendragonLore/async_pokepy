@@ -26,12 +26,34 @@ DEALINGS IN THE SOFTWARE.
 
 from ..utils import _pretty_format
 
+__all__ = (
+    "Name",
+    "VerboseEffect",
+    "VersionGameIndex",
+)
+
 
 class Name:
+    """Represents a name associated with a language.
+
+    .. versionadded:: 0.1.0a
+
+    .. container:: operations
+
+        .. describe:: str(x)
+
+            Returns the name.
+
+    Attributes
+    ----------
+    name: :class:`str`
+        The name.
+    language: :class:`str`
+        The language in which the name is in."""
     __slots__ = ("name", "language")
 
     def __init__(self, data: dict):
-        self.name = data["name"]
+        self.name = _pretty_format(data["name"])
         self.language = data["language"]["name"]
 
     def __str__(self) -> str:
@@ -42,28 +64,40 @@ class Name:
 
 
 class VerboseEffect:
+    """Represents a short and long effect entry associated with a language.
+
+    .. versionadded:: 0.1.0a
+
+    Attributes
+    ----------
+    effect: :class:`str`
+        The localized effect text for in the specific language.
+    short_effect: :class:`str`
+        The localized effect text in brief.
+    language: :class:`str`
+        The language the effect is in."""
     __slots__ = ("effect", "short_effect", "language")
 
     def __init__(self, data: dict):
         self.effect = data["effect"]
         self.short_effect = data["short_effect"]
-        self.language = _pretty_format(data["language"]["name"])
+        self.language = data["language"]["name"]
 
     def __repr__(self) -> str:
         return "<VerboseEffect language='{0.language}'>".format(self)
 
 
 class VersionGameIndex:
-    __slots__ = ("game_index", "version")
-
-    """Represents a partial Version object bound to a GameIndex.
+    """Represents a the version of a game index.
 
     Attributes
     ----------
     game_index: :class:`int`
         The internal id of a PokeAPI resource within game data.
     version: :class:`str`
-        The name of the version relevant to this game index.`"""
+        The name of the version relevant to the game index.`"""
+    __slots__ = ("game_index", "version")
+
     def __init__(self, data: dict):
         self.game_index = data["game_index"]
         self.version = _pretty_format(data["version"]["name"])

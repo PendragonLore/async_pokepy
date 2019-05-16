@@ -24,7 +24,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from ._base import *
-from .common import *
-from .move import *
-from .pokemon import *
+from .abc import *  # noqa: F401
+from .common import *  # noqa: F401
+from .move import *  # noqa: F401
+from .pagination import *  # noqa: F401
+from .pokemon import *  # noqa: F401

@@ -24,6 +24,15 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+__all__ = (
+    "PokemonException",
+    "PokeAPIException",
+    "RateLimited",
+    "NotFound",
+    "Forbidden",
+    "NoMoreItems"
+)
+
 
 class PokemonException(Exception):
     """The base exception for this wrapper."""
@@ -70,3 +79,12 @@ class Forbidden(PokeAPIException):
     """Exception raised when an HTTP request response code is equal to 403 FORBIDDEN.
 
     This inherits from :exc:`PokeAPIException`."""
+
+
+class NoMoreItems(PokemonException):
+    """Exception raised when an AsyncIterator is empty.
+
+    This is usually catched to stop the iteration, unless you directly use
+    the :meth:`AsyncPaginationIterator.next` method you shouldn't worry about it too much.
+
+    .. versionadded:: 0.1.0a"""
