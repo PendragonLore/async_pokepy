@@ -74,6 +74,78 @@ build_3.5_alpine:
   retry: 1
   when: always
 
+build_3.7_stretch:
+  image: python:3.7-stretch
+  stage: build
+  before_script:
+    - apt-get update && apt-get install -y -qq git mercurial cloc openssl ssh gettext sudo build-essential
+    - pip3.7 install -r devreq.txt -U
+  script:
+    - PYTHONPATH="$(pwd)" pytest -vs --cov=async_pokepy --cov-report term-missing:skip-covered
+    - flake8 .
+    - pylint -j "$(nproc)" async_pokepy
+    - isort . --check-only --recursive
+    - python3.7 setup.py sdist bdist_egg bdist_wheel
+    - rm -rf async_pokepy
+    - find dist -name *.whl -exec pip3.7 install '{}' +
+    - pytest -vs
+    - cd docs && make html
+  artifacts:
+    paths:
+      - dist
+      - docs/_build
+    expire_in: 2 days
+  retry: 1
+  when: always
+
+build_3.6_stretch:
+  image: python:3.6-stretch
+  stage: build
+  before_script:
+    - apt-get update && apt-get install -y -qq git mercurial cloc openssl ssh gettext sudo build-essential
+    - pip3.6 install -r devreq.txt -U
+  script:
+    - PYTHONPATH="$(pwd)" pytest -vs --cov=async_pokepy --cov-report term-missing:skip-covered
+    - flake8 .
+    - pylint -j "$(nproc)" async_pokepy
+    - isort . --check-only --recursive
+    - python3.6 setup.py sdist bdist_egg bdist_wheel
+    - rm -rf async_pokepy
+    - find dist -name *.whl -exec pip3.6 install '{}' +
+    - pytest -vs
+    - cd docs && make html
+  artifacts:
+    paths:
+      - dist
+      - docs/_build
+    expire_in: 2 days
+  retry: 1
+  when: always
+
+build_3.5_stretch:
+  image: python:3.5-stretch
+  stage: build
+  before_script:
+    - apt-get update && apt-get install -y -qq git mercurial cloc openssl ssh gettext sudo build-essential
+    - pip3.5 install -r devreq.txt -U
+  script:
+    - PYTHONPATH="$(pwd)" pytest -vs --cov=async_pokepy --cov-report term-missing:skip-covered
+    - flake8 .
+    - pylint -j "$(nproc)" async_pokepy
+    - isort . --check-only --recursive
+    - python3.5 setup.py sdist bdist_egg bdist_wheel
+    - rm -rf async_pokepy
+    - find dist -name *.whl -exec pip3.5 install '{}' +
+    - pytest -vs
+    - cd docs && make html
+  artifacts:
+    paths:
+      - dist
+      - docs/_build
+    expire_in: 2 days
+  retry: 1
+  when: always
+
 deploy:
   stage: deploy
   image: python:3.7-alpine
