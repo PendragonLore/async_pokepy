@@ -1,20 +1,23 @@
+import pathlib
 import re
 
 from setuptools import setup
 
-with open("README.md") as f:
-    long_description = f.read()
+ROOT = pathlib.Path(__file__).parent
 
-with open("requirements.txt") as f:
-    requirements = f.read().splitlines()
+with open(ROOT / "README.md", encoding="utf-8") as f:
+    LONG_DESC = f.read()
 
-with open("async_pokepy/__init__.py") as f:
-    version = re.search(r"^__version__\s*=\s*['\"]([^'\"]*)['\"]", f.read(), re.MULTILINE).group(1)
+with open(ROOT / "requirements.txt", encoding="utf-8") as f:
+    REQS = f.read().splitlines()
 
-if not version:
+with open(ROOT / "async_pokepy" / "__init__.py", encoding="utf-8") as f:
+    VERSION = re.search(r"^__version__\s*=\s*['\"]([^'\"]*)['\"]", f.read(), re.MULTILINE).group(1)
+
+if not VERSION:
     raise RuntimeError("Version is not set.")
 
-extra = {
+EXTRA_REQS = {
     "docs": [
         "sphinx",
         "sphinxcontrib.napoleon",
@@ -31,21 +34,23 @@ extra = {
 
 setup(author="Lorenzo",
       name="async_pokepy",
-      version=version,
+      version=VERSION,
       description="A simple asynchronous wrapper for the PokeAPI.co API.",
-      long_description=long_description,
+      long_description=LONG_DESC,
       long_description_content_type="text/markdown",
       keywords="async pokemon asyncio rest api",
       url="https://github.com/PendragonLore/async_pokepy",
+      download_url="https://github.com/PendragonLore/async_pokepy/archive/{0}.tar.gz".format(VERSION),
       project_urls={
           "Issue Tracker": "https://github.com/PendragonLore/async_pokepy/issues",
           "Documentation": "https://async-pokepy.rtfd.io",
       },
       python_requires=">=3.5.3",
-      install_requires=requirements,
+      platforms=["macOS", "POSIX", "Windows"],
+      install_requires=REQS,
       include_package_data=True,
       license="MIT",
-      extras_require=extra,
+      extras_require=EXTRA_REQS,
       packages=["async_pokepy", "async_pokepy.types"],
       classifiers=[
           "Programming Language :: Python :: 3 :: Only",

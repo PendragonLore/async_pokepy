@@ -13,7 +13,7 @@ __author__ = "Lorenzo"
 __docformat__ = "restructuredtext en"
 __license__ = "MIT"
 __copyright__ = "Copyright 2019 Lorenzo"
-__version__ = "0.1.0a"
+__version__ = "0.1.1a"
 
 from collections import namedtuple
 

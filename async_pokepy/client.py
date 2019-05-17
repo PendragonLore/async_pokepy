@@ -29,7 +29,7 @@ from typing import Union
 
 from .http import HTTPPokemonClient
 from .types import AsyncPaginationIterator, Move, Pokemon
-from .utils import _fmt_param
+from .utils import cached
 
 __all__ = ("Client",)
 
@@ -43,13 +43,13 @@ class Client:
     ----------
     loop: :class:`asyncio.AbstractEventLoop`
         The event loop used for HTTP requests."""
-    __slots__ = ("_http", "loop", "cache_pokemon", "cache_move")
+    __slots__ = ("_http", "loop", "_image_cache")
 
     def __init__(self, http_client: HTTPPokemonClient):
         self._http = http_client
         self.loop = http_client.loop
 
-        self.clear()
+        self._image_cache = {}
 
     @classmethod
     async def connect(cls, **kwargs):
@@ -74,39 +74,14 @@ class Client:
 
         return cls(http)
 
-    def clear(self):
-        """Clear the cache."""
-        self.cache_pokemon = {}
-        self.cache_move = {}
-
     async def close(self):
-        """Close the connection to the API and clear the cache.
+        """Close the connection to the API.
 
         Use this when cleaning up."""
-        self.clear()
         await self._http.close()
         del self
 
-    @staticmethod
-    def _add_to_cache(cache: dict, obj: Union[Pokemon]):
-        cache[(_fmt_param(obj.name), obj.id)] = obj
-
-    @staticmethod
-    def _get_from_cache(cache: dict, query: Union[int, str]):
-        cache_friendly_name = None
-
-        if isinstance(query, str):
-            if query.isdigit():
-                cache_friendly_name = int(query)
-            else:
-                cache_friendly_name = _fmt_param(query)
-
-        for key, value in cache.items():  # Necessary for searching by both ID and name.
-            if (cache_friendly_name or query) in key:
-                return value
-
-        return None
-
+    @cached
     async def get_pokemon(self, query: Union[int, str]) -> Pokemon:
         """Get a :class:`Pokemon` from the API.
         The query can be both the name or the ID as a string or integer.
@@ -131,19 +106,14 @@ class Client:
         -------
         :class:`Pokemon`
             The Pokèmon searched for."""
-
-        check = self._get_from_cache(self.cache_pokemon, query)
-        if check:
-            return check
-
         data = await self._http.get_pokemon(query)
 
         ret = Pokemon(data)
-        self._add_to_cache(self.cache_pokemon, ret)
 
         return ret
 
-    async def get_move(self, query: Union[int, str]):
+    @cached
+    async def get_move(self, query: Union[int, str]) -> Move:
         """Get a :class:`Move` from the API.
         The query can be both the name or the ID as a string or integer.
 
@@ -169,15 +139,9 @@ class Client:
         -------
         :class:`Move`
             The move searched for."""
-
-        check = self._get_from_cache(self.cache_move, query)
-        if check:
-            return check
-
         data = await self._http.get_move(query)
 
         ret = Move(data)
-        self._add_to_cache(self.cache_move, ret)
 
         return ret
 
@@ -185,6 +149,10 @@ class Client:
         """Save a sprite url into a file-like object.
 
         .. versionadded:: 0.0.9a
+
+        .. versionchanged:: 0.1.1a
+
+            The sprite is now cached.
 
         Parameters
         ----------
@@ -218,6 +186,10 @@ class Client:
 
         .. versionadded:: 0.0.9a
 
+        .. versionchanged:: 0.1.1a
+
+            The sprite is now cached.
+
         Parameters
         ----------
         url: :class:`str`
@@ -227,7 +199,15 @@ class Client:
         -------
         :class:`bytes`
             The bytes read."""
-        return await self._http.download_sprite(url)
+        try:
+            val = self._image_cache[url]
+        except KeyError:
+            val = io.BytesIO((await self._http.download_sprite(url)))
+
+            self._image_cache[url] = val
+
+        val.seek(0)
+        return val.read()
 
     def get_pagination(self, obj: str, **kwargs) -> AsyncPaginationIterator:
         """Retuns an async iterator representing a pagination of resources from the API.

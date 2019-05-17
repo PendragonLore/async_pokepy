@@ -24,6 +24,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+import functools
 from typing import Union
 from urllib.parse import quote
 
@@ -41,3 +42,33 @@ def _pretty_format(thing: str) -> str:
     if thing.lower() in ("oh-ho", "porygon-z"):
         return thing.capitalize()
     return thing.replace("-", " ").title()
+
+
+def _make_cache_key(query):
+    if isinstance(query, str):
+        if query.isdigit():
+            return int(query)
+
+        return _fmt_param(query)
+
+    return query
+
+
+def cached(func):
+    cache = {}
+    func.cache = cache
+
+    @functools.wraps(func)
+    async def inner(cls, query: Union[int, str]):  # Very specific but it works and will work for most get_ methods
+        query = _make_cache_key(query)
+
+        for key, value in cache.items():
+            if query in key:
+                return value
+
+        val = await func(cls, query)
+        cache[(_make_cache_key(val.name), val.id)] = val
+
+        return val
+
+    return inner
