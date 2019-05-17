@@ -5,13 +5,13 @@ from setuptools import setup
 
 ROOT = pathlib.Path(__file__).parent
 
-with open(ROOT / "README.md", encoding="utf-8") as f:
+with open(str(ROOT / "README.md"), encoding="utf-8") as f:
     LONG_DESC = f.read()
 
-with open(ROOT / "requirements.txt", encoding="utf-8") as f:
+with open(str(ROOT / "requirements.txt"), encoding="utf-8") as f:
     REQS = f.read().splitlines()
 
-with open(ROOT / "async_pokepy" / "__init__.py", encoding="utf-8") as f:
+with open(str(ROOT / "async_pokepy" / "__init__.py"), encoding="utf-8") as f:
     VERSION = re.search(r"^__version__\s*=\s*['\"]([^'\"]*)['\"]", f.read(), re.MULTILINE).group(1)
 
 if not VERSION:
