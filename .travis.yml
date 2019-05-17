@@ -1,0 +1,15 @@
+dist: trusty
+language: python
+python:
+  - "3.6"
+before_script:
+  - "export PYTHONPATH=$PYTHONPATH:$(pwd)"
+install:
+  - "pip3 install -r devreq.txt -U"
+script:
+  - "pytest -vs --cov=async_pokepy --cov-report term-missing:skip-covered"
+  - "flake8 ."
+  - "pylint async_pokepy"
+  - "isort . --check-only --recursive"
+  - "python setup.py sdist bdist_egg bdist_wheel"
+  - "cd docs && make html"
