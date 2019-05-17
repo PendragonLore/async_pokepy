@@ -5,6 +5,7 @@
 [![PyPI license](https://img.shields.io/pypi/l/async_pokepy.svg)](https://github.com/PendragonLore/async_pokepy/blob/master/LICENSE)
 [![Documentation Status](https://readthedocs.org/projects/async-pokepy/badge/?version=master)](https://async-pokepy.readthedocs.io/en/master/?badge=master)
 [![Pipelines Status](https://gitlab.com/PendragonLore/async_pokepy/badges/master/pipeline.svg)](https://gitlab.com/PendragonLore/async_pokepy/pipelines)
+[![Build Status](https://travis-ci.com/PendragonLore/async_pokepy.svg?branch=master)](https://travis-ci.com/PendragonLore/async_pokepy)
 
 An, in the works, asynchronous wrapper for the [PokeAPI.co API](https://pokeapi.co).
 

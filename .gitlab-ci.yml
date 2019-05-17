@@ -14,11 +14,10 @@ build_3.7_alpine:
     - pylint -j "$(nproc)" async_pokepy
     - isort . --check-only --recursive
     - python3.7 setup.py sdist bdist_egg bdist_wheel
-    - cd docs && make html
-    - cd ..
     - rm -rf async_pokepy
     - find dist -name *.whl -exec pip3.7 install '{}' +
     - pytest -vs
+    - cd docs && make html
   artifacts:
     paths:
       - dist
@@ -39,11 +38,10 @@ build_3.6_alpine:
     - pylint -j "$(nproc)" async_pokepy
     - isort . --check-only --recursive
     - python3.6 setup.py sdist bdist_egg bdist_wheel
-    - cd docs && make html
-    - cd ..
     - rm -rf async_pokepy
     - find dist -name *.whl -exec pip3.6 install '{}' +
     - pytest -vs
+    - cd docs && make html
   artifacts:
     paths:
       - dist
@@ -64,11 +62,10 @@ build_3.5_alpine:
     - pylint -j "$(nproc)" async_pokepy
     - isort . --check-only --recursive
     - python3.5 setup.py sdist bdist_egg bdist_wheel
-    - cd docs && make html
-    - cd ..
     - rm -rf async_pokepy
     - find dist -name *.whl -exec pip3.5 install '{}' +
     - pytest -vs
+    - cd docs && make html
   artifacts:
     paths:
       - dist

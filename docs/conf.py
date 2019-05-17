@@ -11,8 +11,9 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
-import re
 import sys
+
+from async_pokepy import __version__
 
 sys.path.insert(0, os.path.abspath(".."))
 
@@ -22,12 +23,8 @@ project = "async_pokepy"
 copyright = "2019, Lorenzo"  # pylint: disable=redefined-builtin
 author = "Lorenzo"
 
-# The full version, including alpha/beta/rc tags
-with open("../async_pokepy/__init__.py") as f:
-    version = re.search(r"^__version__\s*=\s*['\"]([^'\"]*)['\"]", f.read(), re.MULTILINE).group(1)
-
 # The full version, including alpha/beta/rc tags.
-release = version
+release = __version__
 
 pygments_style = "friendly"
 
