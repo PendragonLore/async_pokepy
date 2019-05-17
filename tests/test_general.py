@@ -37,16 +37,13 @@ async def test_general():
 
     assert isinstance(await client.save_sprite(poke.sprites.back_default, ret), int)
 
-    assert client.cache_pokemon
+    assert client.get_pokemon.cache
 
     assert isinstance(await client.get_move(1), Move)
 
     async for _ in client.get_pagination("pokemon", limit=20, offset=0):
         pass
 
-    assert client.cache_move
+    assert client.get_move.cache
 
     await client.close()
-
-    assert not client.cache_move
-    assert not client.cache_pokemon
