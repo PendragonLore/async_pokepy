@@ -5,8 +5,9 @@
 [![PyPI license](https://img.shields.io/pypi/l/async_pokepy.svg)](https://github.com/PendragonLore/async_pokepy/blob/master/LICENSE)
 [![Documentation Status](https://readthedocs.org/projects/async-pokepy/badge/?version=master)](https://async-pokepy.readthedocs.io/en/master/?badge=master)
 [![Pipelines Status](https://gitlab.com/PendragonLore/async_pokepy/badges/master/pipeline.svg)](https://gitlab.com/PendragonLore/async_pokepy/pipelines)
-[![Build Status](https://travis-ci.com/PendragonLore/async_pokepy.svg?branch=master)](https://travis-ci.com/PendragonLore/async_pokepy)
-[![CircleCI](https://circleci.com/gh/PendragonLore/async_pokepy.svg?style=svg)](https://circleci.com/gh/PendragonLore/async_pokepy)
+[![Build Status](https://img.shields.io/travis/com/PendragonLore/async_pokepy.svg?label=TravisCI)](https://travis-ci.com/PendragonLore/async_pokepy)
+[![CircleCI](https://img.shields.io/circleci/project/github/PendragonLore/async_pokepy/master.svg?label=CircleCI)](https://circleci.com/gh/PendragonLore/async_pokepy)
+[![AppYevorCI](https://img.shields.io/appveyor/ci/PendragonLore/async-pokepy/master.svg?label=AppVeyorCI)](https://ci.appveyor.com/project/PendragonLore/async-pokepy)
 
 An, in the works, asynchronous wrapper for the [PokeAPI.co API](https://pokeapi.co).
 
