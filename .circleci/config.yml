@@ -1,0 +1,50 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6-stretch
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "devreq.txt" }}
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -U pip setuptools wheel
+            pip install -U -r devreq.txt
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "devreq.txt" }}
+
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            PYTHONPATH=$PYTHONPATH:$(pwd) pytest -vs --cov=async_pokepy --cov-report term-missing:skip-covered
+            python3 setup.py sdist bdist_egg bdist_wheel
+            rm -rf async_pokepy
+            find dist -name *.whl -exec pip install '{}' +
+            pytest -vs
+      # build docs
+      - run:
+          name: build documentation
+          command: |
+            . venv/bin/activate
+            cd docs && make html
+      - store_artifacts:
+          path: dist
+          destination: distributions
+
+      - store_artifacts:
+          path: docs/_build
+          destination: documentation
