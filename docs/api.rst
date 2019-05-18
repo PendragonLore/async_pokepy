@@ -28,8 +28,9 @@ Client
 
 .. _ABCs:
 
-Abstract base class
--------------------
+Abstract base classes
+---------------------
+
 An abstract base class (also known as an :class:`~abc.ABC`) is a class that
 models can inherit to get their behaviour.
 
@@ -109,12 +110,31 @@ Move
 .. autoclass:: ContestComboSet()
     :members:
 
+Ability
+~~~~~~~
+
+.. autoclass:: Ability()
+    :members:
+    :inherited-members:
+
+.. autoclass:: AbilityPokemon()
+    :members:
+
+.. autoclass:: AbilityEffectChange()
+    :members:
+
+.. autoclass:: AbilityPokemon()
+    :members:
+
 Common
 ~~~~~~
 
 Some common data classes used by the API.
 
 .. autoclass:: Name()
+    :members:
+
+.. autoclass:: Effect()
     :members:
 
 .. autoclass:: VerboseEffect()

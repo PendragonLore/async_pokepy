@@ -28,6 +28,7 @@ from ..utils import _pretty_format
 
 __all__ = (
     "Name",
+    "Effect",
     "VerboseEffect",
     "VersionGameIndex",
 )
@@ -71,7 +72,7 @@ class VerboseEffect:
     Attributes
     ----------
     effect: :class:`str`
-        The localized effect text for in the specific language.
+        The localized effect text in the associated language.
     short_effect: :class:`str`
         The localized effect text in brief.
     language: :class:`str`
@@ -107,6 +108,16 @@ class VersionGameIndex:
 
 
 class Effect:
+    """Represents an effect description with a language.
+
+    Attributes
+    ----------
+    effect: :class:`str`
+        The localized effect text in the associated language.
+    language: :class:`str`
+        The language the effect is in."""
+    __slots__ = ("effect", "language")
+
     def __init__(self, data: dict):
         self.effect = data["effect"]
         self.language = data["language"]["name"]
@@ -115,4 +126,4 @@ class Effect:
         return self.effect
 
     def __repr__(self) -> str:
-        return "<Effect language={0.effect}>".format(self)
+        return "<Effect language={0.language}>".format(self)

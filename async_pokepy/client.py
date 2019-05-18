@@ -146,7 +146,7 @@ class Client:
         return ret
 
     @cached
-    async def get_ability(self, query: Union[int, str]):
+    async def get_ability(self, query: Union[int, str]) -> Ability:
         """Get a :class:`Ability` from the API.
         The query can be both the name or the ID as a string or integer.
 

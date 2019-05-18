@@ -7,6 +7,11 @@ This page aims to keep an organized view of all of the changes
 since the wrapper's initial release.
 
 
+0.1.2a
+------
+
+- Added :class:`Ability` and :meth:`Client.get_ability` for ability objects.
+
 0.1.1a
 ------
 
