@@ -47,6 +47,8 @@ async def test_general():
         pass
 
     assert isinstance(await client.get_pagination("pokemon", limit=20, offset=50).flatten(), list)
+    assert isinstance(await client.get_pagination("pokemon", limit=150, offset=0).find_similar("snorlax"), list)
+    assert isinstance(await client.get_pagination("pokemon", limit=1, offset=0).find(lambda i: i[1] == 1), tuple)
     assert client.get_move.cache
 
     assert isinstance(await client.get_ability(1), Ability)

@@ -37,7 +37,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
-    "sphinxcontrib.napoleon",
+    "sphinx.ext.napoleon",
     "sphinxcontrib.asyncio",
 ]
 
@@ -50,6 +50,8 @@ templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 gettext_compact = False
+
+autodoc_member_order = "bysource"
 
 # -- Options for HTML output -------------------------------------------------
 

@@ -43,11 +43,11 @@ __all__ = ()
 class Route:
     __slots__ = ("params", "url", "route")
 
-    def __init__(self, base, path, *args, **kwargs):
+    def __init__(self, base, *args, **kwargs):
         self.route = [_fmt_param(arg) for arg in args]
         self.params = ["{0}={1}".format(k, quote(str(v))) for k, v in kwargs.items()]
 
-        url = (base + path + "/".join(self.route))
+        url = base + "/".join(self.route)
         if self.params:
             self.url = url + "?" + "&".join(self.params)
         else:
@@ -61,7 +61,7 @@ class HTTPPokemonClient:
         self.loop = loop or asyncio.get_event_loop()
         self._lock = asyncio.Lock(loop=self.loop)
 
-        self.base = base or "https://pokeapi.co/api/v2"
+        self.base = base or "https://pokeapi.co/api/v2/"
         self.headers = {
             "User-Agent": user_agent or "Python/{0[0]}.{0[1]} aiohttp/{1}".format(sys.version_info, aiohttp.__version__)
         }
@@ -71,7 +71,7 @@ class HTTPPokemonClient:
         async with self._lock:
             for tries in range(5):
                 async with self._session.get(route.url, **kwargs) as resp:
-                    LOG.info("%s %s returned %d status code", resp.method, resp.url, resp.status)
+                    LOG.info("%s %s returned %d %s status code", resp.method, resp.url, resp.status, resp.reason)
 
                     data = (await resp.json() if "application/json" in resp.headers["Content-Type"]
                             else await resp.text())
@@ -122,13 +122,13 @@ class HTTPPokemonClient:
             raise PokeAPIException(resp, "Failed to get the sprite.")
 
     def get_pokemon(self, query: Union[int, str]) -> Coroutine:
-        return self.request(Route(self.base, "/pokemon/", query))
+        return self.request(Route(self.base, "pokemon", query))
 
     def get_move(self, query: Union[int, str]) -> Coroutine:
-        return self.request(Route(self.base, "/move/", query))
+        return self.request(Route(self.base, "move", query))
 
     def get_ability(self, query: Union[int, str]) -> Coroutine:
-        return self.request(Route(self.base, "/ability/", query))
+        return self.request(Route(self.base, "ability", query))
 
     def get_pagination(self, query: str, **kwargs) -> Coroutine:
-        return self.request(Route(self.base, "/{0}/".format(_fmt_param(query)), **kwargs))
+        return self.request(Route(self.base, _fmt_param(query), **kwargs))

@@ -62,7 +62,7 @@ class Client:
         base: Optional[:class:`str`]
             The base to use for all API requests, useful to edit if you
             want to host your own instance of the API.
-            Defaults to ``https://pokeapi.co/api/v2``.
+            Defaults to ``https://pokeapi.co/api/v2/``.
         user_agent: Optional[:class:`str`]
             The User-Agent header to use when making requests.
         loop: Optional[:class:`asyncio.AbstractEventLoop`]
