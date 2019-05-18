@@ -126,6 +126,9 @@ Ability
 .. autoclass:: AbilityPokemon()
     :members:
 
+.. autoclass:: AbilityFlavorText()
+    :members:
+
 Common
 ~~~~~~
 
