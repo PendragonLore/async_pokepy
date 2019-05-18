@@ -111,7 +111,7 @@ class AsyncIterator(metaclass=abc.ABCMeta):
     async def next(self) -> NotImplemented:
         """Get the next item in the iterator.
 
-        This method **must** be emplemented by a subclass.
+        This method **must** be implemented by a subclass.
 
         Raises
         ------

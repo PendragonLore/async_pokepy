@@ -28,7 +28,7 @@ import io
 from typing import Union
 
 from .http import HTTPPokemonClient
-from .types import AsyncPaginationIterator, Move, Pokemon
+from .types import Ability, AsyncPaginationIterator, Move, Pokemon
 from .utils import cached
 
 __all__ = ("Client",)
@@ -142,6 +142,39 @@ class Client:
         data = await self._http.get_move(query)
 
         ret = Move(data)
+
+        return ret
+
+    @cached
+    async def get_ability(self, query: Union[int, str]):
+        """Get a :class:`Ability` from the API.
+        The query can be both the name or the ID as a string or integer.
+
+        The ability will be cached.
+
+        .. versionadded:: 0.1.2a
+
+        Parameters
+        ----------
+        query: Union[:class:`int`, :class:`str`]
+            The name or id of the ability.
+
+        Raises
+        ------
+        PokeAPIException
+            The request failed.
+        NotFound
+            The ability was not found.
+        RateLimited
+            More then 100 requests in one minute.
+
+        Returns
+        -------
+        :class:`Ability`
+            The move searched for."""
+        data = await self._http.get_ability(query)
+
+        ret = Ability(data)
 
         return ret
 

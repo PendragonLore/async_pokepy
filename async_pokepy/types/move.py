@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 
 from ..utils import _pretty_format
 from .abc import BaseObject
+from .ability import AbilityEffectChange
 from .common import Name, VerboseEffect
 
 __all__ = (
@@ -100,6 +101,8 @@ class Move(BaseObject):
         A list of move value changes across version groups of the game.
     stat_changes: List[:class:`MoveStatChange`]
         A list of stats this move effects and how much it effects them.
+    effect_changes: List[:class:`AbilityEffectChange`]
+        The list of previous effects the move has had across version groups of the games.
     target: :class:`str`
         The name of the type of target that will receive the effects of the move.
     type: :class:`str`
@@ -107,7 +110,7 @@ class Move(BaseObject):
     __slots__ = (
         "accuracy", "effect_chance", "pp", "power_points", "priority", "power", "contest_type", "type", "target",
         "generation", "damage_class", "meta", "stat_changes", "names", "effect_entries", "flavor_text_entries",
-        "past_values"
+        "past_values", "effect_changes"
     )
 
     def __init__(self, data: dict):
@@ -126,7 +129,7 @@ class Move(BaseObject):
         self.generation = _pretty_format(data["generation"]["name"])
         self.damage_class = _pretty_format(data["damage_class"]["name"])
 
-        # add effect_changes
+        self.effect_changes = [AbilityEffectChange(d) for d in data["effect_changes"]]
         self.meta = MoveMetaData(data["meta"])
         self.stat_changes = [MoveStatChange(d) for d in data["stat_changes"]]
         self.names = [Name(d) for d in data["names"]]

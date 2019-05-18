@@ -60,7 +60,7 @@ class Name:
         return self.name
 
     def __repr__(self) -> str:
-        return "<Name name='{0.name}' language='{0.language}'>".format(self)
+        return "<Name language='{0.language}'>".format(self)
 
 
 class VerboseEffect:
@@ -95,7 +95,7 @@ class VersionGameIndex:
     game_index: :class:`int`
         The internal id of a PokeAPI resource within game data.
     version: :class:`str`
-        The name of the version relevant to the game index.`"""
+        The name of the version relevant to the game index."""
     __slots__ = ("game_index", "version")
 
     def __init__(self, data: dict):
@@ -104,3 +104,15 @@ class VersionGameIndex:
 
     def __repr__(self) -> str:
         return "<VersionGameIndex game_index={0.game_index} version='{0.version}'>".format(self)
+
+
+class Effect:
+    def __init__(self, data: dict):
+        self.effect = data["effect"]
+        self.language = data["language"]["name"]
+
+    def __str__(self) -> str:
+        return self.effect
+
+    def __repr__(self) -> str:
+        return "<Effect language={0.effect}>".format(self)

@@ -23,4 +23,4 @@ from .types import *  # noqa: F401
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro releaselevel")
 
-version_info = VersionInfo(major=0, minor=1, micro=0, releaselevel="alpha")
+version_info = VersionInfo(major=0, minor=1, micro=1, releaselevel="alpha")

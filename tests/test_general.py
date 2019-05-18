@@ -4,7 +4,7 @@ import io
 
 import pytest
 
-from async_pokepy import Client, Move, NotFound, Pokemon
+from async_pokepy import Ability, Client, Move, NotFound, Pokemon
 
 
 def run_async(func):
@@ -24,6 +24,8 @@ async def test_general():
 
     with pytest.raises(NotFound):
         await client.get_pokemon("notapokemon")
+        await client.get_move("notamove")
+        await client.get_ability("notanability")
 
     assert isinstance(await client.get_pokemon("sNorLax"), Pokemon)
     assert isinstance(await client.get_pokemon(143), Pokemon)
@@ -45,5 +47,8 @@ async def test_general():
         pass
 
     assert client.get_move.cache
+
+    assert isinstance(await client.get_ability(1), Ability)
+    assert client.get_ability.cache
 
     await client.close()
