@@ -19,8 +19,7 @@ if not VERSION:
 
 EXTRA_REQS = {
     "docs": [
-        "sphinx",
-        "sphinxcontrib.napoleon",
+        "sphinx==1.7.4",
         "sphinxcontrib-asyncio",
     ],
     "tests": [

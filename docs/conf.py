@@ -27,6 +27,7 @@ author = "Lorenzo"
 release = __version__
 
 pygments_style = "friendly"
+master_doc = "index"
 
 # -- General configuration ---------------------------------------------------
 
@@ -52,6 +53,8 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 gettext_compact = False
 
 autodoc_member_order = "bysource"
+
+language = None
 
 # -- Options for HTML output -------------------------------------------------
 
