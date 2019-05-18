@@ -14,7 +14,7 @@ Version Related Info
 
 .. data:: version_info
 
-    A :class:`collections.namedtuple` that is similar to :data:`sys.version_info`.
+    A :func:`collections.namedtuple` that is similar to :data:`sys.version_info`.
 
     Just like :data:`sys.version_info` the valid values for releaselevel are
     ‘alpha’, ‘beta’, ‘candidate’ and ‘final’.

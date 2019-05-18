@@ -27,7 +27,7 @@ since the wrapper's initial release.
 - Integrated :class:`AsyncIterator` and :meth:`Client.get_pagination`
   for API pagination, still incomplete and needs testing too.
 - :data:`version_info` for a :data:`sys.version_info`-like
-  :class:`~collections.namedtuple`.
+  :func:`~collections.namedtuple`.
 - All modules now have ``__all__`` defined to them.
 
 0.0.9a
