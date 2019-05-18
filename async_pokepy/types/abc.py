@@ -26,10 +26,10 @@ DEALINGS IN THE SOFTWARE.
 
 import abc
 from difflib import SequenceMatcher
-from typing import Any, Optional, Union
+from typing import Any, Callable, Optional
 
 from ..exceptions import NoMoreItems
-from ..utils import _pretty_format
+from ..utils import _pretty_format, maybe_coroutine
 
 __all__ = (
     "BaseObject",
@@ -120,7 +120,7 @@ class AsyncIterator(metaclass=abc.ABCMeta):
 
         Returns
         -------
-        :class:`~typing.Any`
+        :data:`~typing.Any`
             The next item from the iterator."""
         return NotImplemented
 
@@ -138,20 +138,26 @@ class AsyncIterator(metaclass=abc.ABCMeta):
                 elem = await self.next()
             except NoMoreItems:
                 return results
+            else:
+                results.append(elem)
 
-            results.append(elem)
-
-    async def find(self, query: Union[int, str]) -> Optional[Any]:
+    async def find(self, predicate: Callable) -> Optional[Any]:
         """Search for an id or name in the iterator.
+
+        .. versionchanged:: 0.1.3
+
+            The function now takes a callable as it's only parameter.
 
         Parameters
         ----------
-        query: Union[:class:`int`, :class:`str`]
-            The id or name of the item.
+        predicate: :data:`~typing.Callable`
+            A function, which takes only one argument, an element of the iterator,
+            that returns a boolean-like result.
+            The function could be a coroutine.
 
         Returns
         -------
-        Optional[:class:`~typing.Any`]
+        Optional[:data:`~typing.Any`]
             The found item, could be ``None`` if it was not found."""
         while True:
             try:
@@ -159,29 +165,35 @@ class AsyncIterator(metaclass=abc.ABCMeta):
             except NoMoreItems:
                 return None
 
-            if query in elem:
+            if await maybe_coroutine(predicate, elem):
                 return elem
 
     async def find_similar(self, name: str) -> list:
         """Does a semi-fuzzy search on the iterator.
 
+        .. versionchanged:: 0.1.3
+
+            The results are now sorted by similarity.
+
         Parameters
         ----------
         name: :class:`str`
             The name of the item.
+            This might change depending of the needs of the iterator.
 
         Returns
         -------
         :class:`list`
-            The list of similar results found, might be empty.
-            If a full match is found it will return a list with only that item."""
+            The list of similar results found, that might be empty.
+            If a full match is found it will return a list with only that item.
+            The list is sorted by similarity."""
         similar = []
 
         while True:
             try:
                 elem = await self.next()
             except NoMoreItems:
-                return similar
+                return [y[0] for y in sorted(similar, key=lambda x: x[1])]
 
             diff = int(
                 round(
@@ -194,4 +206,4 @@ class AsyncIterator(metaclass=abc.ABCMeta):
                 return [elem]
 
             if diff > 60:
-                similar.append(elem)
+                similar.append((elem, diff))

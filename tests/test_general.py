@@ -46,6 +46,7 @@ async def test_general():
     async for _ in client.get_pagination("pokemon", limit=20, offset=0):
         pass
 
+    assert isinstance(await client.get_pagination("pokemon", limit=20, offset=50).flatten(), list)
     assert client.get_move.cache
 
     assert isinstance(await client.get_ability(1), Ability)

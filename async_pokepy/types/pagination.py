@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import asyncio
-import typing
+from typing import Optional, Tuple
 
 from ..exceptions import NoMoreItems
 from .abc import AsyncIterator
@@ -43,11 +43,13 @@ class AsyncPaginationIterator(AsyncIterator):
             Iterates over the contents of the async iterator.
 
     .. versionadded:: 0.1.0a"""
-    __slots__ = ("limit", "offset", "thing", "can_iter", "_http", "queue")
+    __slots__ = ("limit", "offset", "thing", "can_iter", "_http", "_queue")
 
     def __init__(self, http, thing: str, limit: int = 20, offset: int = 0):
-        if limit < 1 or offset < 0:
-            raise ValueError("Limit or offset cannot be negative.")
+        if limit < 1:
+            raise ValueError("Limit cannot be 0 or negative.")
+        if offset < 0:
+            raise ValueError("Offset cannot be negative.")
 
         self.limit = limit
         self.offset = offset
@@ -56,9 +58,9 @@ class AsyncPaginationIterator(AsyncIterator):
         self.can_iter = True
         self._http = http
 
-        self.queue = asyncio.Queue()
+        self._queue = asyncio.Queue()
 
-    async def next(self) -> typing.Any:
+    async def next(self) -> Tuple[Optional[str], int]:
         """Get the next resource from the iterator.
 
         Raises
@@ -68,13 +70,14 @@ class AsyncPaginationIterator(AsyncIterator):
 
         Returns
         -------
-        :class:`~typing.Any`
-            The resource."""
-        if self.queue.empty():
+        Tuple[Optional[:class:`str`], :class:`int`]
+            A tuple containing the name, which could be ``None``
+            and the ID of the resource."""
+        if self._queue.empty():
             await self.fill_queue()
 
         try:
-            return self.queue.get_nowait()
+            return self._queue.get_nowait()
         except asyncio.QueueEmpty:
             raise NoMoreItems()
 
@@ -86,6 +89,6 @@ class AsyncPaginationIterator(AsyncIterator):
                 raise NoMoreItems()
 
             for result in data["results"]:
-                await self.queue.put((result["name"], int(result["url"].split("/")[-2])))
+                await self._queue.put((result.get("name"), int(result["url"].split("/")[-2])))
 
             self.can_iter = False

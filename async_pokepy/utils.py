@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import functools
+from inspect import isawaitable
 from typing import Union
 from urllib.parse import quote
 
@@ -44,14 +45,14 @@ def _pretty_format(thing: str) -> str:
     return thing.replace("-", " ").title()
 
 
-def _make_cache_key(query):
-    if isinstance(query, str):
-        if query.isdigit():
-            return int(query)
+def _make_cache_key(key):
+    if isinstance(key, str):
+        if key.isdigit():
+            return int(key)
 
-        return _fmt_param(query)
+        return _fmt_param(key)
 
-    return query
+    return key
 
 
 def cached(func):
@@ -72,3 +73,10 @@ def cached(func):
         return val
 
     return inner
+
+
+async def maybe_coroutine(f, *args, **kwargs):
+    value = f(*args, **kwargs)
+    if isawaitable(value):
+        return await value
+    return value
