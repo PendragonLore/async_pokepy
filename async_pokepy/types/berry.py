@@ -31,6 +31,24 @@ from .common import NamedAPIObject
 class Berry(BaseObject):
     """Represents a berry object from the API.
 
+    .. container:: operations
+
+        .. describe:: str(x)
+
+            Returns the berry's name.
+
+        .. describe:: x[y]
+
+            Returns a berry's y attribute.
+
+        .. describe:: x == y
+
+            Check if two berries are the same.
+
+        .. describe:: x != y
+
+            Check if two berries are *not* the same.
+
     Attributes
     ----------
     id: :class:`int`
