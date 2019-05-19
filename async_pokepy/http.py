@@ -108,7 +108,6 @@ class HTTPPokemonClient:
 
     async def close(self):
         await self._session.close()
-        del self
 
     async def download_sprite(self, url: str) -> bytes:
         async with self._session.get(url) as resp:

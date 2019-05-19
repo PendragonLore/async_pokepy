@@ -79,7 +79,6 @@ class Client:
 
         Use this when cleaning up."""
         await self._http.close()
-        del self
 
     @cached
     async def get_pokemon(self, query: Union[int, str]) -> Pokemon:
