@@ -212,7 +212,7 @@ class AsyncIterator(metaclass=abc.ABCMeta):
             try:
                 elem = await self.next()
             except NoMoreItems:
-                return [y[0] for y in sorted(similar, key=lambda x: x[1])]
+                return [y[0] for y in sorted(similar, key=lambda x: x[1], reverse=True)]
 
             diff = int(
                 round(
