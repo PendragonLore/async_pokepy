@@ -17,41 +17,67 @@ def run_async(func):
 
 
 @run_async
-async def test_general():
+async def test_pokemon():
     client = await Client.connect()
 
-    assert isinstance(client.loop, asyncio.AbstractEventLoop)
+    assert not client.get_pokemon.cache
 
     with pytest.raises(NotFound):
         await client.get_pokemon("notapokemon")
-        await client.get_move("notamove")
-        await client.get_ability("notanability")
+        await client.get_pokemon(9999)
 
-    assert isinstance(await client.get_pokemon("sNorLax"), Pokemon)
-    assert isinstance(await client.get_pokemon(143), Pokemon)
-    assert isinstance(await client.get_pokemon("143"), Pokemon)
+    assert not client.get_pokemon.cache
 
     poke = await client.get_pokemon(1)
 
-    assert isinstance(await client.read_sprite(poke.sprites.back_default), bytes)
-
-    ret = io.BytesIO()
-
-    assert isinstance(await client.save_sprite(poke.sprites.back_default, ret), int)
-
+    assert isinstance(poke, Pokemon)
     assert client.get_pokemon.cache
 
-    assert isinstance(await client.get_move(1), Move)
+    assert not client._image_cache
+    isinstance(await client.read_sprite(poke.sprites.back_default), bytes)
+    assert client._image_cache
 
-    async for _ in client.get_pagination("pokemon", limit=20, offset=0):
-        pass
+    ret = io.BytesIO()
+    assert isinstance(await client.save_sprite(poke.sprites.back_default, ret), int)
 
-    assert isinstance(await client.get_pagination("pokemon", limit=20, offset=50).flatten(), list)
-    assert isinstance(await client.get_pagination("pokemon", limit=150, offset=0).find_similar("snorlax"), list)
-    assert isinstance(await client.get_pagination("pokemon", limit=1, offset=0).find(lambda i: i[1] == 1), tuple)
-    assert client.get_move.cache
+    await client.close()
 
-    assert isinstance(await client.get_ability(1), Ability)
+
+@run_async
+async def test_ability():
+    client = await Client.connect()
+
+    assert not client.get_ability.cache
+
+    with pytest.raises(NotFound):
+        await client.get_ability("notanability")
+        await client.get_ability(9999)
+
+    assert not client.get_ability.cache
+
+    ability = await client.get_ability(1)
+
+    assert isinstance(ability, Ability)
+    assert client.get_ability.cache
+
+    await client.close()
+
+
+@run_async
+async def test_move():
+    client = await Client.connect()
+
+    assert not client.get_move.cache
+
+    with pytest.raises(NotFound):
+        await client.get_move("notamove")
+        await client.get_move(99999)
+
+    assert not client.get_move.cache
+
+    move = await client.get_move(1)
+
+    assert isinstance(move, Move)
     assert client.get_ability.cache
 
     await client.close()

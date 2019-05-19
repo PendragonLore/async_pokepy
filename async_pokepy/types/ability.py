@@ -145,6 +145,12 @@ class AbilityPokemon:
 class AbilityFlavorText:
     """Represents the flavor text for a move, with a language and a version group.
 
+    . container:: operations
+
+        .. describe:: str(x)
+
+            Returns the actual flavor text.
+
     Attributes
     ----------
     flavor_text: :class:`str`

@@ -43,6 +43,25 @@ class BaseObject(metaclass=abc.ABCMeta):
     Current list of full objects:
         * :class:`Pokemon`
         * :class:`Move`
+        * :class:`Ability`
+
+    .. container:: operations
+
+        .. describe:: str(x)
+
+            Returns the object's name.
+
+        .. describe:: x[y]
+
+            Returns the object's y attribute.
+
+        .. describe:: x == y
+
+            Check if two objects are the same.
+
+        .. describe:: x != y
+
+            Check if two objects are *not* the same.
 
     Attributes
     ----------

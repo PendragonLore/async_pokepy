@@ -110,6 +110,12 @@ class VersionGameIndex:
 class Effect:
     """Represents an effect description with a language.
 
+    . container:: operations
+
+        .. describe:: str(x)
+
+            Returns the localized text.
+
     Attributes
     ----------
     effect: :class:`str`
