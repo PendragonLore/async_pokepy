@@ -201,7 +201,7 @@ class PokemonType:
         self.slot = data["slot"]
 
     def __str__(self) -> str:
-        return self.type
+        return str(self.type)
 
     def __repr__(self):
         return "<PokemonType type='{0}' slot={0.slot}>".format(self)
@@ -272,7 +272,7 @@ class PokemonMove:
         self.version_group_details = [PokemonMoveVersion(d) for d in data["version_group_details"]]
 
     def __str__(self) -> str:
-        return self.move
+        return str(self.move)
 
     def __repr__(self) -> str:
         return "<PokemonMove move='{0.move}' version_group_details={0.version_group_details}>".format(self)
@@ -323,7 +323,7 @@ class PokemonHeldItem:
         self.version_details = [PokemonHeldItemVersion(d) for d in data["version_details"]]
 
     def __str__(self) -> str:
-        return self.item
+        return str(self.item)
 
     def __repr__(self) -> str:
         return "<PokemonHeldItem item='{0}' version_details={0.version_details}>".format(self)
