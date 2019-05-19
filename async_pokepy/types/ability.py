@@ -24,9 +24,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from ..utils import _pretty_format
 from .abc import BaseObject
-from .common import Effect, Name, VerboseEffect
+from .common import Effect, Name, NamedAPIObject, VerboseEffect
 
 __all__ = (
     "Ability",
@@ -67,8 +66,8 @@ class Ability(BaseObject):
         The name for the ability.
     is_main_series: :class:`bool`
         Whether or not the ability originated in the main series of the video games.
-    generation: :class:`str`
-        The name of the generation the ability originated in.
+    generation: :class:`NamedAPIObject`
+        The generation the ability originated in.
     names: List[:class:`Name`]
         The name of the ability listed in different languages.
     effect_entries: List[:class:`VerboseEffect`]
@@ -87,7 +86,7 @@ class Ability(BaseObject):
         super().__init__(data)
 
         self.is_main_series = data["is_main_series"]
-        self.generation = _pretty_format(data["generation"]["name"])
+        self.generation = NamedAPIObject(data["generation"])
 
         self.names = [Name(d) for d in data["names"]]
         self.effect_entries = [VerboseEffect(d) for d in data["effect_entries"]]
@@ -108,13 +107,13 @@ class AbilityEffectChange:
     ----------
     effect_entries: List[:class:`Effect`]
         The previous effect of the ability listed in different languages.
-    version_group: :class:`str`
-        The name of the version group in which the previous effect of this ability originated."""
+    version_group: :class:`NamedAPIObject`
+        The version group in which the previous effect of the ability originated."""
     __slots__ = ("effect_entries", "version_group")
 
     def __init__(self, data: dict):
         self.effect_entries = [Effect(d) for d in data["effect_entries"]]
-        self.version_group = _pretty_format(data["version_group"]["name"])
+        self.version_group = NamedAPIObject(data["version_group"])
 
     def __repr__(self) -> str:
         return "<AbilityEffectChange version_group='{0.version_group}'>".format(self)
@@ -129,14 +128,14 @@ class AbilityPokemon:
         Whether or not this a hidden ability for the Pokémon.
     slot: :class:`int`
         The slot of the ability for the pokemon.
-    pokemon: :class:`str`
-        The name of the Pokémon this ability could belong to."""
+    pokemon: :class:`NamedAPIObject`
+        The Pokémon this ability could belong to."""
     __slots__ = ("is_hidden", "slot", "pokemon")
 
     def __init__(self, data: dict):
         self.is_hidden = data["is_hidden"]
         self.slot = data["slot"]
-        self.pokemon = _pretty_format(data["pokemon"]["name"])
+        self.pokemon = NamedAPIObject(data["pokemon"])
 
     def __repr__(self) -> str:
         return "<AbilityPokemon is_hidden={0.is_hidden} slot={0.slot} pokemon='{0.pokemon}'>".format(self)
@@ -155,16 +154,16 @@ class AbilityFlavorText:
     ----------
     flavor_text: :class:`str`
         The actual text.
-    language: :class:`str`
-        The name of the language in which the text is in.
-    version_group: :class:`str`
-        The name of the version group that uses this text."""
+    language: :class:`NamedAPIObject`
+        The language in which the text is in.
+    version_group: :class:`NamedAPIObject`
+        The version group that uses this text."""
     __slots__ = ("flavor_text", "language", "version_group")
 
     def __init__(self, data: dict):
         self.flavor_text = data["flavor_text"]
-        self.language = data["language"]["name"]
-        self.version_group = _pretty_format(data["version_group"]["name"])
+        self.language = NamedAPIObject(data["language"])
+        self.version_group = NamedAPIObject(data["version_group"])
 
     def __str__(self) -> str:
         return self.flavor_text

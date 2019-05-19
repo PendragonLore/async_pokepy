@@ -129,10 +129,26 @@ Ability
 .. autoclass:: AbilityFlavorText()
     :members:
 
+Berry
+~~~~~
+
+.. autoclass:: Berry()
+    :members:
+    :inherited-members:
+
+.. autoclass:: BerryFlavorMap()
+    :members:
+
 Common
 ~~~~~~
 
 Some common data classes used by the API.
+
+.. autoclass:: APIObject()
+    :members:
+
+.. autoclass:: NamedAPIObject()
+    :members:
 
 .. autoclass:: Name()
     :members:

@@ -28,7 +28,7 @@ import io
 from typing import Union
 
 from .http import HTTPPokemonClient
-from .types import Ability, AsyncPaginationIterator, Move, Pokemon
+from .types import Ability, AsyncPaginationIterator, Berry, Move, Pokemon
 from .utils import cached
 
 __all__ = ("Client",)
@@ -178,6 +178,39 @@ class Client:
 
         return ret
 
+    @cached
+    async def get_berry(self, query: Union[int, str]) -> Berry:
+        """Get a :class:`Berry` from the API.
+        The query can be both the name or the ID as a string or integer.
+
+        The berry will be cached.
+
+        .. versionadded:: 0.1.3a
+
+        Parameters
+        ----------
+        query: Union[:class:`int`, :class:`str`]
+            The name or id of the berryr.
+
+        Raises
+        ------
+        PokeAPIException
+            The request failed.
+        NotFound
+            The berry was not found.
+        RateLimited
+            More then 100 requests in one minute.
+
+        Returns
+        -------
+        :class:`Berry`
+            The berry searched for."""
+        data = await self._http.get_berry(query)
+
+        ret = Berry(data)
+
+        return ret
+
     async def save_sprite(self, url: str, fp, *, seek_begin: bool = True) -> int:
         """Save a sprite url into a file-like object.
 
@@ -243,16 +276,16 @@ class Client:
         return val.read()
 
     def get_pagination(self, obj: str, **kwargs) -> AsyncPaginationIterator:
-        """Retuns an async iterator representing a pagination of resources from the API.
+        """Retuns an async iterator representing a pagination of objects from the API.
 
         .. versionadded:: 0.1.0a
 
         Parameters
         ----------
         obj: :class:`str`
-            The name of the resource.
+            The name of the object.
         limit: Optional[:class:`int`]
-            The amount of the resources, defaults to ``20``.
+            The amount of the objects, defaults to ``20``.
         offset: Optional[:class:`int`]
             The start position of the pagination, defaults to ``0``.
 

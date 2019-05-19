@@ -44,6 +44,7 @@ class BaseObject(metaclass=abc.ABCMeta):
         * :class:`Pokemon`
         * :class:`Move`
         * :class:`Ability`
+        * :class:`Berry`
 
     .. container:: operations
 

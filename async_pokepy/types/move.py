@@ -24,10 +24,9 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from ..utils import _pretty_format
 from .abc import BaseObject
 from .ability import AbilityEffectChange
-from .common import Name, VerboseEffect
+from .common import APIObject, MachineVersionDetail, Name, NamedAPIObject, VerboseEffect
 
 __all__ = (
     "Move",
@@ -83,16 +82,20 @@ class Move(BaseObject):
         The base power of the move with a value of 0 if it does not have a base power.
     contest_combos: :class:`ContestComboSets`
         A detail of normal and super contest combos that require the move.
-    contest_type: :class:`str`
-        The name of the type of appeal the move gives a Pokémon when used in a contest.
-    damage_class: :class:`str`
-        The name of the type of damage the move inflicts on the target, e.g. physical.
+    contest_type: :class:`NamedAPIObject`
+        The type of appeal the move gives a Pokémon when used in a contest.
+    contest_effect: :class:`APIObject`
+        The effect the move has when used in a contest.
+    super_contest_effect: :class:`APIObject`
+        The effect the move has when used in a super contest.
+    damage_class: :class:`NamedAPIObject`
+        The type of damage the move inflicts on the target, e.g. physical.
     effect_entries: List[:class:`VerboseEffect`]
         The effect of the move listed in different languages.
     flavor_text_entries: List[:class:`MoveFlavorText`]
         The flavor text of the move listed in different languages.
-    generation: :class:`str`
-        The name of the generation in which the move was introduced.
+    generation: :class:`NamedAPIObject`
+        The generation in which the move was introduced.
     meta: :class:`MoveMetaData`
         Metadata about the move.
     names: List[:class:`Name`]
@@ -103,14 +106,16 @@ class Move(BaseObject):
         A list of stats this move effects and how much it effects them.
     effect_changes: List[:class:`AbilityEffectChange`]
         The list of previous effects the move has had across version groups of the games.
-    target: :class:`str`
-        The name of the type of target that will receive the effects of the move.
-    type: :class:`str`
-        The elemental type of the move."""
+    target: :class:`NamedAPIObject`
+        The type of target that will receive the effects of the move.
+    type: :class:`NamedAPIObject`
+        The elemental type of the move.
+    machines: :class:`MachineVersionDetail`
+        A list of the machines that teach this move."""
     __slots__ = (
         "accuracy", "effect_chance", "pp", "power_points", "priority", "power", "contest_type", "type", "target",
         "generation", "damage_class", "meta", "stat_changes", "names", "effect_entries", "flavor_text_entries",
-        "past_values", "effect_changes"
+        "past_values", "effect_changes", "contest_effect", "super_contest_effect", "machines"
     )
 
     def __init__(self, data: dict):
@@ -123,11 +128,13 @@ class Move(BaseObject):
         self.priority = data["priority"]
         self.power = data["power"]
 
-        self.contest_type = _pretty_format(data["contest_type"]["name"])
-        self.type = _pretty_format(data["type"]["name"])
-        self.target = _pretty_format(data["target"]["name"])
-        self.generation = _pretty_format(data["generation"]["name"])
-        self.damage_class = _pretty_format(data["damage_class"]["name"])
+        self.contest_type = NamedAPIObject(data["contest_type"])
+        self.type = NamedAPIObject(data["type"])
+        self.target = NamedAPIObject(data["target"])
+        self.generation = NamedAPIObject(data["generation"])
+        self.damage_class = NamedAPIObject(data["damage_class"])
+        self.contest_effect = APIObject(data["contest_effect"])
+        self.super_contest_effect = APIObject(data["super_contest_effect"])
 
         self.effect_changes = [AbilityEffectChange(d) for d in data["effect_changes"]]
         self.meta = MoveMetaData(data["meta"])
@@ -136,6 +143,7 @@ class Move(BaseObject):
         self.effect_entries = [VerboseEffect(d) for d in data["effect_entries"]]
         self.flavor_text_entries = [MoveFlavorText(d) for d in data["flavor_text_entries"]]
         self.past_values = [PastMoveStatValues(d) for d in data["past_values"]]
+        self.machines = [MachineVersionDetail(d) for d in data["machines"]]
 
     def __repr__(self) -> str:
         return "<Move id={0.id} name='{0}'>".format(self)
@@ -150,16 +158,16 @@ class MoveFlavorText:
     ----------
     flavor_text: :class:`str`
         The localized flavor text for the move in the associated language.
-    language: :class:`str`
-        The name of the language this text is in.
-    version_group: :class:`str`
-        The name of the version group that uses this flavor text."""
+    language: :class:`NamedAPIObject`
+        The language the text is in.
+    version_group: :class:`NamedAPIObject`
+        The version group that uses the text."""
     __slots__ = ("flavor_text", "language", "version_group")
 
     def __init__(self, data: dict):
         self.flavor_text = data["flavor_text"]
-        self.language = data["language"]["name"]
-        self.version_group = _pretty_format(data["version_group"]["name"])
+        self.language = NamedAPIObject(data["language"])
+        self.version_group = NamedAPIObject(data["version_group"])
 
     def __repr__(self) -> str:
         return "<MoveFlavorText language='{0.language}' version_group='{0.version_group}'>".format(self)
@@ -172,10 +180,10 @@ class MoveMetaData:
 
     Attributes
     ----------
-    ailment: :class:`str`
+    ailment: :class:`NamedAPIObject`
         The status ailment the move inflicts on it's target.
-    category: :class:`str`
-        The name of the category of move the move falls under, e.g. damage or ailment.
+    category: :class:`NamedAPIObject`
+        The category of move the move falls under, e.g. damage or ailment.
     min_hits: Optional[:class:`int`]
         The minimum number of times the move hits. ``None`` if it always only hits once.
     max_hits: Optional[:class:`int`]
@@ -203,8 +211,8 @@ class MoveMetaData:
     )
 
     def __init__(self, data: dict):
-        self.ailment = _pretty_format(data["ailment"]["name"])
-        self.category = _pretty_format(data["category"]["name"])
+        self.ailment = NamedAPIObject(data["ailment"])
+        self.category = NamedAPIObject(data["category"])
 
         self.min_hits = data["min_hits"]
         self.max_hits = data["max_hits"]
@@ -230,13 +238,13 @@ class MoveStatChange:
     ----------
     change: :class:`int`
         The amount of change.
-    stat: :class:`str`
+    stat: :class:`NamedAPIObject`
         The stat being affected."""
     __slots__ = ("change", "stat")
 
     def __init__(self, data: dict):
         self.change = data["change"]
-        self.stat = _pretty_format(data["stat"]["name"])
+        self.stat = NamedAPIObject(data["stat"])
 
     def __repr__(self) -> str:
         return "<MoveStatChange change={0.change} stat='{0.stat}'>".format(self)
@@ -259,10 +267,10 @@ class PastMoveStatValues:
         Power points. The number of times the move can be used.
     effect_entries: List[:class:`VerboseEffect`]
         The effect of the move listed in different languages.
-    type: :class:`str`
-        The name of the elemental type of the move.
-    version_group: :class:`str`
-        The name of the version group in which these move stat values were in effect."""
+    type: :class:`NamedAPIObject`
+        The elemental type of the move.
+    version_group: :class:`NamedAPIObject`
+        The version group in which these move stat values were in effect."""
     __slots__ = ("accuracy", "effect_chance", "power", "pp", "effect_entries", "type", "version_group")
 
     def __init__(self, data: dict):
@@ -271,8 +279,8 @@ class PastMoveStatValues:
         self.power = data["power"]
         self.pp = data["pp"]
         self.effect_entries = [VerboseEffect(d) for d in data["effect_entries"]]
-        self.type = _pretty_format(data["type"]["name"])
-        self.version_group = _pretty_format(data["version_group"]["name"])
+        self.type = NamedAPIObject(data["type"])
+        self.version_group = NamedAPIObject(data["version_group"])
 
     def __repr__(self) -> str:
         return "<PastMoveStatValues type='{0.type}' version_group='{0.version_group}'>".format(self)
@@ -286,15 +294,15 @@ class ContestComboDetail:
 
     Attributes
     ----------
-    use_before: List[:class:`str`]
-        A list of name of moves to use before this move.
+    use_before: List[:class:`NamedAPIObject`]
+        A list of moves to use before this move.
     use_after: List[:class:`str`]
-        A list of name of moves to use after this move."""
+        A list of moves to use after this move."""
     __slots__ = ("use_before", "use_after")
 
     def __init__(self, data: dict):
-        self.use_before = [_pretty_format(d["name"]) for d in data["use_before"]]
-        self.use_after = [_pretty_format(d["name"]) for d in data["use_after"]]
+        self.use_before = [NamedAPIObject(d) for d in data["use_before"]]
+        self.use_after = [NamedAPIObject(d) for d in data["use_after"]]
 
     def __repr__(self) -> str:
         return "<ContestComboDetail use_before={0.use_before} use_after={0.use_after}>".format(self)

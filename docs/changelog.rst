@@ -6,6 +6,18 @@ Changelog
 This page aims to keep an organized view of all of the changes
 since the wrapper's initial release.
 
+0.1.3a
+------
+
+- Various improvements with :class:`AsyncPaginationIterator`
+  and :class:`AsyncIterator`
+- Many objects attributes that were strings are now :class:`NamedAPIObject`
+  or :class:`APIObject`.
+- :class:`AsyncPaginationIterator` now uses both of the
+  instead of a :class:`tuple`.
+- :class:`MachineVersionDetail` for :class:`Move`
+- :class:`Berry` objects.
+
 
 0.1.2a
 ------

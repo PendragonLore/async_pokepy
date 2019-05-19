@@ -24,9 +24,8 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from ..utils import _pretty_format
 from .abc import BaseObject
-from .common import VersionGameIndex
+from .common import NamedAPIObject, VersionGameIndex
 
 __all__ = (
     "Pokemon",
@@ -82,7 +81,7 @@ class Pokemon(BaseObject):
         A list of :class:`PokemonAbility` the Pokémon could potentially have.
     moves: List[:class:`PokemonMove`]
         A list of moves along with learn methods and level details pertaining to specific version groups.
-    forms: List[:class:`str`]
+    forms: List[:class:`NamedAPIObject`]
         A list of forms the Pokémon can take on.
     game_indices: List[:class:`VersionGameIndex`]
         A list of :class:`VersionGameIndex` relevent to Pokémon item by generation.
@@ -92,7 +91,8 @@ class Pokemon(BaseObject):
         A list of details showing types the Pokémon has.
     sprites: :class:`PokemonSprites`
         A set of sprites used to depict the Pokémon in the game.
-    """
+    species: :class:`NamedAPIObject`
+        The species the Pokémon belongs to."""
     __slots__ = (
         "stats", "types", "weight", "moves", "abilities", "height",
         "sprites", "held_items", "base_experience", "is_default", "order",
@@ -109,8 +109,8 @@ class Pokemon(BaseObject):
         self.is_default = data["is_default"]
         self.order = data["order"]
 
-        self.species = data["species"]["name"]
-        self.forms = [_pretty_format(d["name"]) for d in data["forms"]]
+        self.species = NamedAPIObject(data["species"])
+        self.forms = [NamedAPIObject(d) for d in data["forms"]]
 
         self.sprites = PokemonSprites(data["sprites"])
 
@@ -130,8 +130,8 @@ class PokemonStat:
 
     Attributes
     ----------
-    stat: :class:`str`
-        The name of the stat.
+    stat: :class:`NamedAPIObject`
+        The stat.
     effort: :class:`int`
         The effort points (EV) the Pokémon has in the stat.
     base_stat: :class:`int`
@@ -140,7 +140,7 @@ class PokemonStat:
     __slots__ = ("stat", "effort", "base_stat")
 
     def __init__(self, data: dict):
-        self.stat = _pretty_format(data["stat"]["name"])
+        self.stat = NamedAPIObject(data["stat"])
         self.effort = data["effort"]
         self.base_stat = data["base_stat"]
 
@@ -159,8 +159,8 @@ class PokemonAbility:
 
     Attributes
     ----------
-    ability: :class:`str`
-        The ability's name.
+    ability: :class:`NamedAPIObject`
+        The ability.
     slot: :class:`int`
         The slot the ability occupies in the Pokémon species.
     is_hidden: :class:`bool`
@@ -170,7 +170,7 @@ class PokemonAbility:
     def __init__(self, data: dict):
         self.is_hidden = data["is_hidden"]
         self.slot = data["slot"]
-        self.ability = _pretty_format(data["ability"]["name"])
+        self.ability = NamedAPIObject(data["ability"])
 
     def __str__(self) -> str:
         return self.ability
@@ -190,14 +190,14 @@ class PokemonType:
 
     Attributes
     ----------
-    type: :class:`str`
-        The name of the type the Pokémon has.
+    type: :class:`NamedAPIObject`
+        The type the Pokémon has.
     slot: :class:`int`
         The order the Pokémon's types are listed in."""
     __slots__ = ("type", "slot")
 
     def __init__(self, data: dict):
-        self.type = _pretty_format(data["type"]["name"])
+        self.type = NamedAPIObject(data["type"])
         self.slot = data["slot"]
 
     def __str__(self) -> str:
@@ -260,15 +260,15 @@ class PokemonMove:
 
     Attributes
     ----------
-    move: :class:`str`
-        The name of the move the Pokémon can learn.
+    move: :class:`NamedAPIObject`
+        The move the Pokémon can learn.
     version_group_details: List[:class:`PokemonMoveVersion`]
         The details of the version in which the Pokémon can learn the move.
     """
     __slots__ = ("move", "version_group_details")
 
     def __init__(self, data: dict):
-        self.move = _pretty_format(data["move"]["name"])
+        self.move = NamedAPIObject(data["move"])
         self.version_group_details = [PokemonMoveVersion(d) for d in data["version_group_details"]]
 
     def __str__(self) -> str:
@@ -283,18 +283,18 @@ class PokemonMoveVersion:
 
     Attributes
     ----------
-    move_learn_method: :class:`str`
-        The name of the method by which the move is learned.
-    version_group: :class:`str`
-        The name of the version group in which the move is learned.
+    move_learn_method: :class:`NamedAPIObject`
+        The method by which the move is learned.
+    version_group: :class:`NamedAPIObject`
+        The version group in which the move is learned.
     level_learned_at: :class:`int`
         The minimum level to learn the move."""
     __slots__ = ("move_learn_method", "version_group", "level_learned_at")
 
     def __init__(self, data: dict):
         self.level_learned_at = data["level_learned_at"]
-        self.version_group = _pretty_format(data["version_group"]["name"])
-        self.move_learn_method = _pretty_format(data["move_learn_method"]["name"])
+        self.version_group = NamedAPIObject(data["version_group"])
+        self.move_learn_method = NamedAPIObject(data["move_learn_method"])
 
     def __repr__(self) -> str:
         return ("<PokemonMoveVersion move_learn_method='{0.move_learn_method}' level_learned_at={0.level_learned_at}>"
@@ -312,14 +312,14 @@ class PokemonHeldItem:
 
     Attributes
     ----------
-    item: :class:`str`
-        The item the bound Pokémon holds.
+    item: :class:`NamedAPIObject`
+        The item the Pokémon holds.
     version_details: List[:class:`PokemonHeldItemVersion`]
         The details of the different versions in which the item is held."""
     __slots__ = ("item", "version_details")
 
     def __init__(self, data: dict):
-        self.item = _pretty_format(data["item"]["name"])
+        self.item = NamedAPIObject(data["item"])
         self.version_details = [PokemonHeldItemVersion(d) for d in data["version_details"]]
 
     def __str__(self) -> str:
@@ -334,14 +334,14 @@ class PokemonHeldItemVersion:
 
     Attributes
     ----------
-    version: :class:`str`
+    version: :class:`NamedAPIObject`
         The version bound to the held item.
     rarity: :class:`int`
         How often the item is held."""
     __slots__ = ("version", "rarity")
 
     def __init__(self, data: dict):
-        self.version = _pretty_format(data["version"]["name"])
+        self.version = NamedAPIObject(data["version"])
         self.rarity = data["rarity"]
 
     def __repr__(self) -> str:

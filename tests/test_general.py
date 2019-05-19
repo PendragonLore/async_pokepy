@@ -4,7 +4,7 @@ import io
 
 import pytest
 
-from async_pokepy import Ability, Client, Move, NotFound, Pokemon
+from async_pokepy import Ability, Berry, Client, Move, NamedAPIObject, NotFound, Pokemon
 
 
 def run_async(func):
@@ -78,6 +78,40 @@ async def test_move():
     move = await client.get_move(1)
 
     assert isinstance(move, Move)
-    assert client.get_ability.cache
+    assert client.get_move.cache
+
+    await client.close()
+
+
+@run_async
+async def test_berry():
+    client = await Client.connect()
+
+    assert not client.get_berry.cache
+
+    with pytest.raises(NotFound):
+        await client.get_berry("getberry")
+        await client.get_berry(99999)
+
+    assert not client.get_berry.cache
+
+    berry = await client.get_berry(1)
+
+    assert isinstance(berry, Berry)
+    assert client.get_berry.cache
+
+    await client.close()
+
+
+@run_async
+async def test_pagination():
+    client = await Client.connect()
+
+    with pytest.raises(NotFound):
+        await client.get_pagination("notanobj").flatten()
+
+    assert isinstance(await client.get_pagination("pokemon").flatten(), list)
+    assert isinstance(await client.get_pagination("pokemon").find(lambda x: x.id == 1), NamedAPIObject)
+    assert isinstance(await client.get_pagination("pokemon").find(lambda x: x.id == 9999), type(None))
 
     await client.close()

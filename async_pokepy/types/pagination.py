@@ -25,16 +25,17 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import asyncio
-from typing import Optional, Tuple
+from typing import Union
 
 from ..exceptions import NoMoreItems
 from .abc import AsyncIterator
+from .common import APIObject, NamedAPIObject
 
 __all__ = ("AsyncPaginationIterator",)
 
 
 class AsyncPaginationIterator(AsyncIterator):
-    """Represents an async iterator iterating over a pagination of resources.
+    """Represents an async iterator iterating over a pagination of objects.
 
     .. container:: operations
 
@@ -60,19 +61,23 @@ class AsyncPaginationIterator(AsyncIterator):
 
         self._queue = asyncio.Queue()
 
-    async def next(self) -> Tuple[Optional[str], int]:
-        """Get the next resource from the iterator.
+    async def next(self) -> Union[NamedAPIObject, APIObject]:
+        """Get the next object from the iterator.
 
         Raises
         ------
         NoMoreItems
             There are no more items left.
 
+        .. versionchanged:: 0.1.3a
+
+            This method now returns an Union of
+            :class:`NamedAPIObject` and :class:`APIResource`.
+
         Returns
         -------
-        Tuple[Optional[:class:`str`], :class:`int`]
-            A tuple containing the name, which could be ``None``
-            and the ID of the resource."""
+        Union[:class:`NamedAPIObject`, :class:`APIResource`]
+            The partial object."""
         if self._queue.empty():
             await self.fill_queue()
 
@@ -89,6 +94,9 @@ class AsyncPaginationIterator(AsyncIterator):
                 raise NoMoreItems()
 
             for result in data["results"]:
-                await self._queue.put((result.get("name"), int(result["url"].split("/")[-2])))
+                if result.get("name"):
+                    await self._queue.put(NamedAPIObject(result))
+                else:
+                    await self._queue.put(APIObject(result))
 
             self.can_iter = False
