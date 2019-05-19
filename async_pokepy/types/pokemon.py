@@ -173,7 +173,7 @@ class PokemonAbility:
         self.ability = NamedAPIObject(data["ability"])
 
     def __str__(self) -> str:
-        return self.ability
+        return str(self.ability)
 
     def __repr__(self) -> str:
         return "<PokemonAbility ability='{0}' is_hidden={0.is_hidden} slot={0.slot}>".format(self)

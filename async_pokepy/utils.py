@@ -68,7 +68,7 @@ def cached(func):
                 return value
 
         val = await func(cls, query)
-        cache[(_make_cache_key(val.name), val.id)] = val
+        cache[(_make_cache_key(val.name), _make_cache_key(val.id))] = val
 
         return val
 
