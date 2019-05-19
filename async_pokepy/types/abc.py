@@ -218,7 +218,7 @@ class AsyncIterator(metaclass=abc.ABCMeta):
             diff = int(
                 round(
                     100 * SequenceMatcher(None, name.lower().strip().replace("-", " "),
-                                          elem[0].replace("-", " ")).quick_ratio()
+                                          elem.name.replace("-", " ")).ratio()
                 )
             )
 
