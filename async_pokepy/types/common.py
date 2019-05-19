@@ -40,6 +40,8 @@ __all__ = (
 class APIObject:
     """Represents a partial API object with an ID.
 
+    .. versionadded:: 0.1.3a
+
     Attributes
     ----------
     id: :class:`int`
@@ -55,6 +57,8 @@ class NamedAPIObject(APIObject):
     """Represents a partial API object with a name and ID.
 
     This inherits from :class:`APIObject`.
+
+    .. versionadded:: 0.1.3a
 
     .. container:: operations
 
@@ -156,7 +160,9 @@ class VersionGameIndex:
 class Effect:
     """Represents an effect description with a language.
 
-    . container:: operations
+    .. versionadded:: 0.1.2a
+
+    .. container:: operations
 
         .. describe:: str(x)
 
