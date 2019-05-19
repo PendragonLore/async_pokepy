@@ -143,6 +143,17 @@ build_3.5_stretch:
   retry: 1
   when: always
 
+pages:
+  stage: deploy
+  image: alpine:latest
+  script:
+    - mv docs/_build/html public
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+
 deploy:
   stage: deploy
   image: python:3.7-alpine
