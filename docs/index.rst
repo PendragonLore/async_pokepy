@@ -18,6 +18,7 @@ Welcome to async_pokepy's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   introduction
    api
    changelog
 

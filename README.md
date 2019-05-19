@@ -1,4 +1,4 @@
-# async_pokepy
+# ![Logo](https://i.imgur.com/HbPBYwf.png) async_pokepy
 
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/async_pokepy.svg)](https://pypi.python.org/pypi/async-pokepy/)
 [![PyPI status](https://img.shields.io/pypi/status/async_pokepy.svg)](https://pypi.python.org/pypi/async_pokepy/)
@@ -23,6 +23,14 @@ The wrapper is available on PyPi, you can install it with:
 
 ``pip install async_pokepy``
 
+If you also want to be able to run the tests/lint install it with:
+
+``pip install async_pokepy[tests]``
+
+For building the docs:
+
+``pip install async_pokepy[docs]``
+
 ## Example
 
 ```python
@@ -46,4 +54,7 @@ loop = asyncio.get_event_loop()
 loop.run_until_complete(main("Snorlax"))
 ```
 
-This will output: "Snorlax has the abilities Gluttony, Thick Fat, Immunity"
+This will output: "Snorlax has the abilities Gluttony, Thick Fat, Immunity".
+
+You can check out more examples in the [example](https://github.com/PendragonLore/async_pokepy/tree/master/example)
+folder in the github repository or in the introduction section of the docs.
