@@ -57,15 +57,16 @@ class Route:
 class HTTPPokemonClient:
     __slots__ = ("loop", "headers", "_session", "_lock", "base")
 
-    def __init__(self, base: str = None, user_agent: str = None, **kwargs):
+    def __init__(self, **kwargs):
         self.loop = kwargs.pop("loop", asyncio.get_event_loop())
 
         self._lock = asyncio.Lock(loop=self.loop)
 
-        self.base = base or "https://pokeapi.co/api/v2/"
+        self.base = kwargs.pop("base", "https://pokeapi.co/api/v2/")
         self._session = kwargs.pop("session", None)
         self.headers = {
-            "User-Agent": user_agent or "Python/{0[0]}.{0[1]} aiohttp/{1}".format(sys.version_info, aiohttp.__version__)
+            "User-Agent": kwargs.pop(
+                "user_agent", "Python/{0[0]}.{0[1]} aiohttp/{1}".format(sys.version_info, aiohttp.__version__))
         }
 
     async def request(self, route, **kwargs) -> Union[str, dict]:

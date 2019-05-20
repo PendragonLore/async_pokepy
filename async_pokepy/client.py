@@ -52,8 +52,8 @@ class Client:
         self._image_cache = {}
 
     @classmethod
-    async def connect(cls, *args, **kwargs):
-        r"""Connect to the PokeAPI.
+    async def connect(cls, **kwargs):
+        """Connect to the PokeAPI.
 
         You **must** use this classmethod to connect.
 
@@ -65,12 +65,12 @@ class Client:
             Defaults to ``https://pokeapi.co/api/v2/``.
         user_agent: Optional[:class:`str`]
             The User-Agent header to use when making requests.
-        \**loop: Optional[:class:`asyncio.AbstractEventLoop`]
+        loop: Optional[:class:`asyncio.AbstractEventLoop`]
             The event loop used for HTTP requests, if no loop is provided
             :func:`asyncio.get_event_loop` is used to get one.
-        \**session: Optional[:class:`aiohttp.ClientSession`]
+        session: Optional[:class:`aiohttp.ClientSession`]
             The client session to use during requests."""
-        http = HTTPPokemonClient(*args, **kwargs)
+        http = HTTPPokemonClient(**kwargs)
         await http.connect()
 
         return cls(http)
