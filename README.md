@@ -23,11 +23,24 @@ The wrapper is available on PyPi, you can install it with:
 
 ``pip install async_pokepy``
 
+### Better caching
+
+It's very recommended to install the library with lru-dict,
+you can do this by installing the wrapper with this command:
+
+``pip install async_pokepy[lru]``
+
+The wrapper will throw a warning if you try to use it without this extra package.
+
+### Tests and docs
+
 If you also want to be able to run the tests/lint install it with:
 
 ``pip install async_pokepy[tests]``
 
-For building the docs:
+The best way to run tests is by using ``tox``.
+
+For docs building:
 
 ``pip install async_pokepy[docs]``
 

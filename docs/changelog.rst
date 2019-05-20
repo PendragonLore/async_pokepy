@@ -6,6 +6,22 @@ Changelog
 This page aims to keep an organized view of all of the changes
 since the wrapper's initial release.
 
+0.1.5a
+------
+
+- :class:`Machine` object with :meth:`Client.get_machine`
+- Added `lru-dict <https://pypi.org/project/lru-dict/>`_ as an optional package for overall
+  better caching with a least recently used algorithim and a maxsize of 128.
+- :class:`UnNamedBaseObject` for full objects without a name provided.
+- Can now pass a custom :class:`aiohttp.ClientSession`
+  in :meth:`Client.connect`.
+
+0.1.4a
+------
+
+- Hotfixes for :class:`AsyncPaginationIterator` mostly.
+
+
 0.1.3a
 ------
 

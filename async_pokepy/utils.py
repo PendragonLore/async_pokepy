@@ -25,9 +25,15 @@ DEALINGS IN THE SOFTWARE.
 """
 
 import functools
+import warnings
 from inspect import isawaitable
 from typing import Union
 from urllib.parse import quote
+
+try:
+    from lru import LRU
+except ImportError:
+    LRU = None
 
 __all__ = ()
 
@@ -55,24 +61,35 @@ def _make_cache_key(key):
     return key
 
 
-def cached(func):
-    cache = {}
-    func.cache = cache
+def cached(maxsize: int, with_name: bool = True):
+    def outer(func):
+        @functools.wraps(func)
+        async def inner(cls, query: Union[int, str]):  # Very specific but it works and will work for most get_ methods
+            query = _make_cache_key(query)
 
-    @functools.wraps(func)
-    async def inner(cls, query: Union[int, str]):  # Very specific but it works and will work for most get_ methods
-        query = _make_cache_key(query)
+            for key, value in cache.items():
+                if query in key:
+                    return value
 
-        for key, value in cache.items():
-            if query in key:
-                return value
+            val = await func(cls, query)
+            if with_name:
+                cache[(_make_cache_key(val.name), _make_cache_key(val.id))] = val
+            else:
+                cache[(_make_cache_key(val.id),)] = val
 
-        val = await func(cls, query)
-        cache[(_make_cache_key(val.name), _make_cache_key(val.id))] = val
+            return val
 
-        return val
+        if LRU:
+            cache = LRU(maxsize)
+        else:
+            cache = {}
+            warnings.warn("lru-dict is not installed, so the cache will not have a maxsize.")
 
-    return inner
+        inner.cache = cache
+
+        return inner
+
+    return outer
 
 
 async def maybe_coroutine(f, *args, **kwargs):

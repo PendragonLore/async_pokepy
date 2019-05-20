@@ -36,9 +36,11 @@ models can inherit to get their behaviour.
 
 **Abstract base classes cannot be instantiated.**
 
+.. autoclass:: UnNamedBaseObject()
+    :members:
+
 .. autoclass:: BaseObject()
     :members:
-    :inherited-members:
 
 .. autoclass:: AsyncIterator()
     :members:
@@ -138,6 +140,13 @@ Berry
 
 .. autoclass:: BerryFlavorMap()
     :members:
+
+Machine
+~~~~~~~
+
+.. autoclass:: Machine()
+    :members:
+    :inherited-members:
 
 Common
 ~~~~~~

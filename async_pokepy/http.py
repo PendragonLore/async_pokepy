@@ -57,15 +57,16 @@ class Route:
 class HTTPPokemonClient:
     __slots__ = ("loop", "headers", "_session", "_lock", "base")
 
-    def __init__(self, loop: asyncio.AbstractEventLoop = None, base: str = None, user_agent: str = None):
-        self.loop = loop or asyncio.get_event_loop()
+    def __init__(self, base: str = None, user_agent: str = None, **kwargs):
+        self.loop = kwargs.pop("loop", asyncio.get_event_loop())
+
         self._lock = asyncio.Lock(loop=self.loop)
 
         self.base = base or "https://pokeapi.co/api/v2/"
+        self._session = kwargs.pop("session", None)
         self.headers = {
             "User-Agent": user_agent or "Python/{0[0]}.{0[1]} aiohttp/{1}".format(sys.version_info, aiohttp.__version__)
         }
-        self._session = None
 
     async def request(self, route, **kwargs) -> Union[str, dict]:
         async with self._lock:
@@ -104,7 +105,8 @@ class HTTPPokemonClient:
             raise PokeAPIException(resp, "Request timed out.")
 
     async def connect(self):
-        self._session = aiohttp.ClientSession(headers=self.headers, loop=self.loop)
+        if not self._session or self._session.closed:
+            self._session = aiohttp.ClientSession(headers=self.headers, loop=self.loop)
 
     async def close(self):
         await self._session.close()
@@ -131,6 +133,9 @@ class HTTPPokemonClient:
 
     def get_berry(self, query: Union[int, str]) -> Coroutine:
         return self.request(Route(self.base, "berry", query))
+
+    def get_machine(self, query: int) -> Coroutine:
+        return self.request(Route(self.base, "machine", query))
 
     def get_pagination(self, query: str, **kwargs) -> Coroutine:
         return self.request(Route(self.base, query, **kwargs))

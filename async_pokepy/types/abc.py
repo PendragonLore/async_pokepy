@@ -33,18 +33,81 @@ from ..utils import _pretty_format, maybe_coroutine
 
 __all__ = (
     "BaseObject",
-    "AsyncIterator"
+    "AsyncIterator",
+    "UnNamedBaseObject"
 )
 
 
-class BaseObject(metaclass=abc.ABCMeta):
+class UnNamedBaseObject(metaclass=abc.ABCMeta):
+    """The abstract base class which all other full objects without name inherit from.
+
+    Current list of full objects without name:
+        * :class:`Machine`
+
+    .. versionadded:: 0.1.5a
+
+    .. container:: operations
+
+        .. describe:: x[y]
+
+            Returns the object's y attribute.
+
+        .. describe:: x == y
+
+            Check if two objects are the same.
+
+        .. describe:: x != y
+
+            Check if two objects are *not* the same.
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The object's unique identifier."""
+    __slots__ = ("id", "_data")
+
+    def __init__(self, data: dict):
+        self._data = data
+
+        self.id = data["id"]
+
+    def __getitem__(self, item) -> Any:
+        return self._data[item]
+
+    def __eq__(self, other) -> bool:
+        return isinstance(other, self.__class__) and self.id == other.id
+
+    def __ne__(self, other) -> bool:
+        return not self.__eq__(other)
+
+    @abc.abstractmethod
+    def __repr__(self) -> NotImplemented:
+        return NotImplemented
+
+    def to_dict(self) -> dict:
+        """Returns the raw data of the object as a :class:`dict`.
+
+        Returns
+        -------
+        :class:`dict`
+            The raw data."""
+        return self._data
+
+
+class BaseObject(UnNamedBaseObject, metaclass=abc.ABCMeta):
     """The abstract base class which all other full objects inherit from.
+
+    This inherits from :class:`UnNamedBaseObject`.
 
     Current list of full objects:
         * :class:`Pokemon`
         * :class:`Move`
         * :class:`Ability`
         * :class:`Berry`
+
+    .. versionchanged:: 0.1.5a
+
+        This now inherits from :class:`UnNamedBaseObject`.
 
     .. container:: operations
 
@@ -70,38 +133,19 @@ class BaseObject(metaclass=abc.ABCMeta):
         The object's unique name.
     id: :class:`int`
         The object's unique identifier."""
-    __slots__ = ("name", "id", "_data")
+    __slots__ = ("name",)
 
     def __init__(self, data: dict):
-        self._data = data
+        super().__init__(data)
 
-        self.id = data["id"]  # pylint: disable=invalid-name
         self.name = _pretty_format(data["name"])
 
     def __str__(self) -> str:
         return self.name
 
-    def __getitem__(self, item) -> Any:
-        return self._data[item]
-
-    def __eq__(self, other) -> bool:
-        return isinstance(other, self.__class__) and self.id == other.id
-
-    def __ne__(self, other) -> bool:
-        return not self.__eq__(other)
-
     @abc.abstractmethod
     def __repr__(self) -> NotImplemented:
         return NotImplemented
-
-    def to_dict(self) -> dict:
-        """Returns the raw data of the object as a :class:`dict`.
-
-        Returns
-        -------
-        :class:`dict`
-            The raw data."""
-        return self._data
 
 
 class AsyncIterator(metaclass=abc.ABCMeta):

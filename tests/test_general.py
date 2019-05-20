@@ -2,9 +2,11 @@ import asyncio
 import functools
 import io
 
+import aiohttp
 import pytest
 
-from async_pokepy import Ability, Berry, Client, Move, NamedAPIObject, NotFound, Pokemon
+from async_pokepy import Ability, Berry, Client, Machine, Move, NamedAPIObject, NotFound, Pokemon
+from async_pokepy.http import Route
 
 
 def run_async(func):
@@ -33,9 +35,9 @@ async def test_pokemon():
     assert isinstance(poke, Pokemon)
     assert client.get_pokemon.cache
 
-    assert not client._image_cache
+    assert not client._image_cache  # pylint: disable=protected-access
     isinstance(await client.read_sprite(poke.sprites.back_default), bytes)
-    assert client._image_cache
+    assert client._image_cache  # pylint: disable=protected-access
 
     ret = io.BytesIO()
     assert isinstance(await client.save_sprite(poke.sprites.back_default, ret), int)
@@ -113,5 +115,38 @@ async def test_pagination():
     assert isinstance(await client.get_pagination("pokemon").flatten(), list)
     assert isinstance(await client.get_pagination("pokemon").find(lambda x: x.id == 1), NamedAPIObject)
     assert isinstance(await client.get_pagination("pokemon").find(lambda x: x.id == 9999), type(None))
+    assert isinstance(await client.get_pagination("pokemon").find_similar("bulbasaur"), list)
 
+    await client.close()
+
+
+@run_async
+async def test_machine():
+    client = await Client.connect()
+
+    assert not client.get_machine.cache
+
+    with pytest.raises(NotFound):
+        await client.get_machine("notamachine")
+
+    assert not client.get_machine.cache
+
+    assert isinstance(await client.get_machine(1), Machine)
+
+    assert client.get_machine.cache
+
+    await client.close()
+
+
+@run_async
+async def test_other():
+    base = "https://pokeapi.co/api/v2/"
+
+    assert Route(base, "ability", limit=20, offset=20).url == "https://pokeapi.co/api/v2/ability?limit=20&offset=20"
+    assert Route(base, "pokemon").url == "https://pokeapi.co/api/v2/pokemon"
+    assert Route(base, "pOkEmOn").url == "https://pokeapi.co/api/v2/pokemon"
+    assert Route(base, "evoLuTioN chAin").url == "https://pokeapi.co/api/v2/evolution-chain"
+
+    session = aiohttp.ClientSession()
+    client = await Client.connect(session=session)
     await client.close()

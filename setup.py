@@ -18,6 +18,9 @@ if not VERSION:
     raise RuntimeError("Version is not set.")
 
 EXTRA_REQS = {
+    "lru": [
+        "lru-dict"
+    ],
     "docs": [
         "sphinx==1.7.4",
         "sphinxcontrib-asyncio",

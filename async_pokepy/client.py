@@ -28,7 +28,7 @@ import io
 from typing import Union
 
 from .http import HTTPPokemonClient
-from .types import Ability, AsyncPaginationIterator, Berry, Move, Pokemon
+from .types import Ability, AsyncPaginationIterator, Berry, Machine, Move, Pokemon
 from .utils import cached
 
 __all__ = ("Client",)
@@ -52,8 +52,8 @@ class Client:
         self._image_cache = {}
 
     @classmethod
-    async def connect(cls, **kwargs):
-        """Connect to the PokeAPI.
+    async def connect(cls, *args, **kwargs):
+        r"""Connect to the PokeAPI.
 
         You **must** use this classmethod to connect.
 
@@ -65,11 +65,12 @@ class Client:
             Defaults to ``https://pokeapi.co/api/v2/``.
         user_agent: Optional[:class:`str`]
             The User-Agent header to use when making requests.
-        loop: Optional[:class:`asyncio.AbstractEventLoop`]
+        \**loop: Optional[:class:`asyncio.AbstractEventLoop`]
             The event loop used for HTTP requests, if no loop is provided
-            :func:`asyncio.get_event_loop` is used to get one."""
-
-        http = HTTPPokemonClient(**kwargs)
+            :func:`asyncio.get_event_loop` is used to get one.
+        \**session: Optional[:class:`aiohttp.ClientSession`]
+            The client session to use during requests."""
+        http = HTTPPokemonClient(*args, **kwargs)
         await http.connect()
 
         return cls(http)
@@ -80,7 +81,7 @@ class Client:
         Use this when cleaning up."""
         await self._http.close()
 
-    @cached
+    @cached(128)
     async def get_pokemon(self, query: Union[int, str]) -> Pokemon:
         """Get a :class:`Pokemon` from the API.
         The query can be both the name or the ID as a string or integer.
@@ -111,7 +112,7 @@ class Client:
 
         return ret
 
-    @cached
+    @cached(128)
     async def get_move(self, query: Union[int, str]) -> Move:
         """Get a :class:`Move` from the API.
         The query can be both the name or the ID as a string or integer.
@@ -144,7 +145,7 @@ class Client:
 
         return ret
 
-    @cached
+    @cached(128)
     async def get_ability(self, query: Union[int, str]) -> Ability:
         """Get a :class:`Ability` from the API.
         The query can be both the name or the ID as a string or integer.
@@ -177,7 +178,7 @@ class Client:
 
         return ret
 
-    @cached
+    @cached(128)
     async def get_berry(self, query: Union[int, str]) -> Berry:
         """Get a :class:`Berry` from the API.
         The query can be both the name or the ID as a string or integer.
@@ -207,6 +208,39 @@ class Client:
         data = await self._http.get_berry(query)
 
         ret = Berry(data)
+
+        return ret
+
+    @cached(128, with_name=False)
+    async def get_machine(self, query: Union[int, str]) -> Machine:
+        """Get a :class:`Machine` from the API.
+        The query can **only** be the ID of the machine as a string or int.
+
+        The machine will be cached.
+
+        .. versionadded:: 0.1.5a
+
+        Parameters
+        ----------
+        query: Union[:class:`int`, :class:`str`]
+            The id of the machine.
+
+        Raises
+        ------
+        PokeAPIException
+            The request failed.
+        NotFound
+            The machine was not found.
+        RateLimited
+            More then 100 requests in one minute.
+
+        Returns
+        -------
+        :class:`Machine`
+            The machine searched for."""
+        data = await self._http.get_machine(query)
+
+        ret = Machine(data)
 
         return ret
 
