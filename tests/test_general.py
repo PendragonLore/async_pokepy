@@ -1,6 +1,7 @@
 import asyncio
 import functools
 import io
+import sys
 
 import aiohttp
 import pytest
@@ -142,7 +143,9 @@ async def test_machine():
 async def test_other():
     base = "https://pokeapi.co/api/v2/"
 
-    assert Route(base, "ability", limit=20, offset=20).url == "https://pokeapi.co/api/v2/ability?limit=20&offset=20"
+    if not sys.version_info[0:2] == (3, 5):  # unordered kwargs in py35 kinda break this
+        assert Route(base, "ability", limit=20, offset=20).url == "https://pokeapi.co/api/v2/ability?limit=20&offset=20"
+
     assert Route(base, "pokemon").url == "https://pokeapi.co/api/v2/pokemon"
     assert Route(base, "pOkEmOn").url == "https://pokeapi.co/api/v2/pokemon"
     assert Route(base, "evoLuTioN chAin").url == "https://pokeapi.co/api/v2/evolution-chain"
