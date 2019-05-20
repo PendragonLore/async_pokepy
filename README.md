@@ -11,28 +11,39 @@
 
 An, in the works, asynchronous wrapper for the [PokeAPI.co API](https://pokeapi.co).
 
-You can check out the (failing) pipelines @ [gitlab](https://gitlab.com/PendragonLore/async_pokepy).
-
 ## Documentation
 
-The docs are available @ [readthedocs](https://async-pokepy.readthedocs.io/en/master/).
+The documentation is available at [readthedocs](https://async-pokepy.readthedocs.io/en/master/) or on
+[gitlab pages](https://pendragonlore.gitlab.io/async_pokepy/), mostly as a backup.
 
 ## Installing
 
-The wrapper is available on PyPi, you can install it with:
+The wrapper is available on PyPi and requires Python 3.5.3+, to install it you can just run the following command:
 
-``pip install async_pokepy``
+```sh
+python3 -m pip install -U async_pokepy
+
+# or on Windows
+py -3 -m pip install -U async_pokepy
+```
+
+To install the development version, do the following:
+
+```sh
+git clone https://github.com/PendragonLore/async_pokepy.git
+cd async_pokepy
+python3 -m pip install -U .[lru,...]
+```
 
 ### Better caching
 
-It's very recommended to install the library with lru-dict,
-you can do this by installing the wrapper with this command:
+It's recommended to install the library with [lru-dict](https://pypi.org/project/lru-dict/), you can do this with this command:
 
 ``pip install async_pokepy[lru]``
 
-The wrapper will throw a warning if you try to use it without this extra package.
+A warning will be thrown if you try to use it without this extra package.
 
-### Tests and docs
+### Documentation building, linting and tests
 
 If you also want to be able to run the tests/lint install it with:
 
@@ -40,7 +51,7 @@ If you also want to be able to run the tests/lint install it with:
 
 The best way to run tests is by using ``tox``.
 
-For docs building:
+For documentation building:
 
 ``pip install async_pokepy[docs]``
 
@@ -70,4 +81,4 @@ loop.run_until_complete(main("Snorlax"))
 This will output: "Snorlax has the abilities Gluttony, Thick Fat, Immunity".
 
 You can check out more examples in the [example](https://github.com/PendragonLore/async_pokepy/tree/master/example)
-folder in the github repository or in the introduction section of the docs.
+folder in the github repository or in the [introduction section of the docs](https://async-pokepy.readthedocs.io/en/master/introduction.html).
