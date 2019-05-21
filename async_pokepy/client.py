@@ -34,7 +34,7 @@ from .utils import cached
 __all__ = ("connect",)
 
 
-def connect(base=None, **kwargs):
+def connect(base="https://pokeapi.co/api/v2/", **kwargs):
     """Connect to the PokeAPI.
 
     You **must** use this method to connect.
