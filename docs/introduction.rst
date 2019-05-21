@@ -1,7 +1,36 @@
 .. currentmodule:: async_pokepy
 
-An introduction to async pokepy
-===============================
+Introduction
+============
+
+Installing
+----------
+
+The wrapper **requires** Python 3.5.3.
+
+Since the library is available on `PyPi <https://pypi.org/project/async-pokepy/>`_
+it is really easy to install by running this command:
+
+.. code-block:: sh
+
+    python3 -m pip install -U async_pokepy
+
+    # or on Windows
+    py -3 -m pip install -U async_pokepy
+
+It's also very much recommended to install it with lru-dict
+for faster, more memory efficient caching; which is easy to do
+through the following command:
+
+.. code-block:: sh
+
+    python3 -m pip install -U async_pokepy[lru]
+
+    # or on Windows
+    py -3 -m pip install -U async_pokepy[lru]
+
+Examples
+--------
 
 This wrapper was specifically made to be
 simple, fast, ready and easy to use.
@@ -10,7 +39,7 @@ In this part of the documentation you will find
 some basic examples on how to use this library.
 
 Basic example
--------------
+~~~~~~~~~~~~~
 
 This is a basic example that shows how the library is structured.
 
@@ -22,10 +51,10 @@ to the easier and better looking execution of asynchronous code.
     # First we import the library.
     In [1]: import async_pokepy
 
-    # Then we initiate a client through the Client.connect classmethod.
+    # Then we initiate a client through the connect method.
     # It's a good practice to only have a single client
     # and to close it when done.
-    In [2]: client = await async_pokepy.Client.connect()
+    In [2]: client = await async_pokepy.connect()
 
     # Let's search for a Pokémon! Let's say, Snorlax.
     In [3]: pokemon = await client.get_pokemon("snorlax")
@@ -70,7 +99,7 @@ This is the basic gist of the library,
 but let's try with something more concrete.
 
 Fuzzy user input based search
------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python3
 
