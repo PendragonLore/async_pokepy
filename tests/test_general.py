@@ -6,7 +6,7 @@ import sys
 import aiohttp
 import pytest
 
-from async_pokepy import Ability, Berry, Client, Machine, Move, NamedAPIObject, NotFound, Pokemon
+from async_pokepy import Ability, Berry, Machine, Move, NamedAPIObject, NotFound, Pokemon, connect
 from async_pokepy.http import Route
 
 
@@ -21,7 +21,7 @@ def run_async(func):
 
 @run_async
 async def test_pokemon():
-    client = await Client.connect()
+    client = await connect()
 
     assert not client.get_pokemon.cache
 
@@ -48,7 +48,7 @@ async def test_pokemon():
 
 @run_async
 async def test_ability():
-    client = await Client.connect()
+    client = await connect()
 
     assert not client.get_ability.cache
 
@@ -68,7 +68,7 @@ async def test_ability():
 
 @run_async
 async def test_move():
-    client = await Client.connect()
+    client = await connect()
 
     assert not client.get_move.cache
 
@@ -88,7 +88,7 @@ async def test_move():
 
 @run_async
 async def test_berry():
-    client = await Client.connect()
+    client = await connect()
 
     assert not client.get_berry.cache
 
@@ -108,7 +108,7 @@ async def test_berry():
 
 @run_async
 async def test_pagination():
-    client = await Client.connect()
+    client = await connect()
 
     with pytest.raises(NotFound):
         await client.get_pagination("notanobj").flatten()
@@ -123,7 +123,7 @@ async def test_pagination():
 
 @run_async
 async def test_machine():
-    client = await Client.connect()
+    client = await connect()
 
     assert not client.get_machine.cache
 
@@ -151,5 +151,6 @@ async def test_other():
     assert Route(base, "evoLuTioN chAin").url == "https://pokeapi.co/api/v2/evolution-chain"
 
     session = aiohttp.ClientSession()
-    client = await Client.connect(session=session)
-    await client.close()
+    async with connect(session=session) as client:
+        assert client._http._session is session  # pylint: disable=protected-access
+    assert client._http._session.closed  # pylint: disable=protected-access

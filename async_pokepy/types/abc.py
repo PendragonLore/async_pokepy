@@ -205,7 +205,7 @@ class AsyncIterator(metaclass=abc.ABCMeta):
             else:
                 results.append(elem)
 
-    async def find(self, predicate: Callable) -> Optional[Any]:
+    async def find(self, predicate: Callable[[Any], bool]) -> Optional[Any]:
         """Search for an id or name in the iterator.
 
         .. versionchanged:: 0.1.3
@@ -214,7 +214,7 @@ class AsyncIterator(metaclass=abc.ABCMeta):
 
         Parameters
         ----------
-        predicate: :data:`~typing.Callable`
+        predicate: :data:`~typing.Callable`[[:data:`~typing.Any`], :class:`bool`]
             A function, which takes only one argument, an element of the iterator,
             that returns a boolean-like result.
             The function could be a coroutine.

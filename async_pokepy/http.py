@@ -57,12 +57,12 @@ class Route:
 class HTTPPokemonClient:
     __slots__ = ("loop", "headers", "_session", "_lock", "base")
 
-    def __init__(self, **kwargs):
+    def __init__(self, base, **kwargs):
         self.loop = kwargs.pop("loop", asyncio.get_event_loop())
 
         self._lock = asyncio.Lock(loop=self.loop)
 
-        self.base = kwargs.pop("base", "https://pokeapi.co/api/v2/")
+        self.base = base or "https://pokeapi.co/api/v2/"
         self._session = kwargs.pop("session", None)
         self.headers = {
             "User-Agent": kwargs.pop(

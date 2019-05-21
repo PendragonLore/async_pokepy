@@ -6,10 +6,16 @@ Changelog
 This page aims to keep an organized view of all of the changes
 since the wrapper's initial release.
 
+0.1.6a
+------
+
+- :meth:`connect` instead of the outdated :meth:`Client.connect`.
+- ``base`` can now be a positional argument in :meth:`connect`.
+
 0.1.5a
 ------
 
-- :class:`Machine` object with :meth:`Client.get_machine`
+- :class:`Machine` object with :meth:`Client.get_machine`.
 - Added `lru-dict <https://pypi.org/project/lru-dict/>`_ as an optional package for overall
   better caching with a least recently used algorithim and a maxsize of 128.
 - :class:`UnNamedBaseObject` for full objects without a name provided.

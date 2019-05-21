@@ -27,7 +27,9 @@ DEALINGS IN THE SOFTWARE.
 from .abc import UnNamedBaseObject
 from .common import NamedAPIObject
 
-__all__ = ("Machine",)
+__all__ = (
+    "Machine",
+)
 
 
 class Machine(UnNamedBaseObject):

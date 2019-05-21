@@ -22,6 +22,8 @@ Version Related Info
 Client
 ------
 
+.. autofunction:: connect
+
 .. autoclass:: Client()
     :members:
 

@@ -31,13 +31,78 @@ from .http import HTTPPokemonClient
 from .types import Ability, AsyncPaginationIterator, Berry, Machine, Move, Pokemon
 from .utils import cached
 
-__all__ = ("Client",)
+__all__ = ("connect",)
+
+
+def connect(base=None, **kwargs):
+    """Connect to the PokeAPI.
+
+    You **must** use this method to connect.
+
+    This return a context manager mixin so you can do both this:
+
+    .. code-block:: python3
+
+        async with async_pokepy.connect():
+            # do stuff
+
+    and this
+
+    .. code-block:: python3
+
+        try:
+            client = await async_pokepy.connect()
+
+            # do stuff
+        except ...:
+            # handle exceptions
+        finally:
+            await client.close()
+
+    Parameters
+    ----------
+    base: Optional[:class:`str`]
+        The base to use for all API requests, useful to edit if you
+        want to host your own instance of the API.
+        Defaults to ``https://pokeapi.co/api/v2/``.
+    user_agent: Optional[:class:`str`]
+        The User-Agent header to use when making requests.
+    loop: Optional[:class:`asyncio.AbstractEventLoop`]
+        The event loop used for HTTP requests, if no loop is provided
+        :func:`asyncio.get_event_loop` is used to get one.
+    session: Optional[:class:`aiohttp.ClientSession`]
+        The client session to use during requests.
+
+    Returns
+    -------
+    :class:`Client`
+        The PokeAPI client."""
+    return _ClientContextMixin(base, **kwargs)
+
+
+class _ClientContextMixin:
+    def __init__(self, base, **kwargs):
+        self._base = base
+        self._kwargs = kwargs
+
+        self._client = None
+
+    def __await__(self):
+        return Client._connect(self._base, **self._kwargs).__await__()  # pylint: disable=protected-access,no-member
+
+    async def __aenter__(self):
+        self._client = await Client._connect(self._base, **self._kwargs)  # pylint: disable=protected-access
+
+        return self._client
+
+    async def __aexit__(self, *args):
+        await self._client.close()
 
 
 class Client:
     """The client representing a connection with the API.
 
-    You must use :meth:`~Client.connect` to initiate the class.
+    You must use :meth:`connect` to initiate this class.
 
     Attributes
     ----------
@@ -52,25 +117,8 @@ class Client:
         self._image_cache = {}
 
     @classmethod
-    async def connect(cls, **kwargs):
-        """Connect to the PokeAPI.
-
-        You **must** use this classmethod to connect.
-
-        Parameters
-        ----------
-        base: Optional[:class:`str`]
-            The base to use for all API requests, useful to edit if you
-            want to host your own instance of the API.
-            Defaults to ``https://pokeapi.co/api/v2/``.
-        user_agent: Optional[:class:`str`]
-            The User-Agent header to use when making requests.
-        loop: Optional[:class:`asyncio.AbstractEventLoop`]
-            The event loop used for HTTP requests, if no loop is provided
-            :func:`asyncio.get_event_loop` is used to get one.
-        session: Optional[:class:`aiohttp.ClientSession`]
-            The client session to use during requests."""
-        http = HTTPPokemonClient(**kwargs)
+    async def _connect(cls, base, **kwargs):
+        http = HTTPPokemonClient(base, **kwargs)
         await http.connect()
 
         return cls(http)
