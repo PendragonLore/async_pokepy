@@ -152,5 +152,10 @@ async def test_other():
 
     session = aiohttp.ClientSession()
     async with connect(session=session) as client:
+        pokemon = await client.get_pokemon("snorlax")
+
         assert client._http._session is session  # pylint: disable=protected-access
+
+    for _ in pokemon.sprites:
+        pass
     assert client._http._session.closed  # pylint: disable=protected-access

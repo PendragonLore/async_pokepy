@@ -1,4 +1,4 @@
-.. py:currentmodule:: async_pokepy
+.. currentmodule:: async_pokepy
 
 API reference
 =============

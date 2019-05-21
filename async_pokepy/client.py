@@ -37,9 +37,9 @@ __all__ = ("connect",)
 def connect(base="https://pokeapi.co/api/v2/", **kwargs):
     """Connect to the PokeAPI.
 
-    You **must** use this method to connect.
+    This method **must** be used to connect.
 
-    This returns a context manager mixin so you can do both this:
+    This returns a context manager mixin so it's possible to both do this:
 
     .. code-block:: python3
 
@@ -102,7 +102,7 @@ class _ClientContextMixin:
 class Client:
     """The client representing a connection with the API.
 
-    You must use :meth:`connect` to initiate this class.
+    It's necessary to use :meth:`Connect` to initiate this class.
 
     Attributes
     ----------

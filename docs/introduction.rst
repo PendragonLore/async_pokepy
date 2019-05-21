@@ -35,7 +35,7 @@ Examples
 This wrapper was specifically made to be
 simple, fast, ready and easy to use.
 
-In this part of the documentation you will find
+In this part of the documentation it's possible to find
 some basic examples on how to use this library.
 
 Basic example

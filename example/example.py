@@ -4,7 +4,7 @@ import async_pokepy
 
 
 async def main(query):
-    client = await async_pokepy.Client.connect()
+    client = await async_pokepy.connect()
 
     pokemon = await client.get_pokemon(query)
 

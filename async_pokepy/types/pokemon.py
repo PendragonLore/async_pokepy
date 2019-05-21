@@ -213,6 +213,20 @@ class PokemonSprites:
     .. note::
         All of these attributes could be ``None`` or a friendly image url of the described sprite.
 
+    .. container:: operations
+
+        .. describe:: for x in y
+
+            Returns an iterator over the sprites.
+
+        .. describe:: list(x)
+
+            Returns all of the sprites as a list, this will consume the iterator.
+
+        .. describe:: len(x)
+
+            Returns the number of sprites that are **not** ``None``.
+
     Attributes
     ----------
     front_default: Optional[:class:`str`]
@@ -230,11 +244,10 @@ class PokemonSprites:
     back_female: Optional[:class:`str`]
         The female sprite of a Pokémon from the back in battle.
     back_shiny_female: Optional[:class:`str`]
-        The shiny sprite depiction of a Pokémon from the back in battle.
-    """
+        The shiny sprite depiction of a Pokémon from the back in battle."""
     __slots__ = (
         "front_default", "front_shiny", "front_female", "front_shiny_female",
-        "back_default", "back_shiny", "back_female", "back_shiny_female"
+        "back_default", "back_shiny", "back_female", "back_shiny_female", "__iter", "__sprites"
     )
 
     def __init__(self, data: dict):
@@ -247,6 +260,18 @@ class PokemonSprites:
         self.back_shiny = data["back_shiny"]
         self.back_female = data["back_female"]
         self.back_shiny_female = data["back_shiny_female"]
+
+        self.__sprites = [value for value in data.values()]
+        self.__iter = iter(self.__sprites)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        return next(self.__iter)
+
+    def __len__(self) -> int:
+        return len([x for x in self.__sprites if x is not None])
 
 
 class PokemonMove:

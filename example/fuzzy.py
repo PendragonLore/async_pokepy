@@ -4,7 +4,7 @@ import async_pokepy
 
 
 async def main():
-    client = await async_pokepy.Client.connect()
+    client = await async_pokepy.connect()
 
     # Ask for input
     name = input("What Pokémon do you want to search? ")

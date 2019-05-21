@@ -6,6 +6,11 @@ Changelog
 This page aims to keep an organized view of all of the changes
 since the wrapper's initial release.
 
+0.1.7a
+------
+
+- :class:`PokemonSprites` is now also an iterable that works with :meth:`len`.
+
 0.1.6a
 ------
 
@@ -20,7 +25,7 @@ since the wrapper's initial release.
   better caching with a least recently used algorithim and a maxsize of 128.
 - :class:`UnNamedBaseObject` for full objects without a name provided.
 - Can now pass a custom :class:`aiohttp.ClientSession`
-  in :meth:`Client.connect`.
+  in :meth:`connect`.
 
 0.1.4a
 ------

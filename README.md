@@ -18,7 +18,7 @@ The documentation is available at [readthedocs](https://async-pokepy.readthedocs
 
 ## Installing
 
-The wrapper is available on PyPi and requires Python 3.5.3+, to install it you can just run the following command:
+The wrapper is available on PyPi and requires Python 3.5.3+, to install it just run the following command:
 
 ```sh
 python3 -m pip install -U async_pokepy
@@ -27,25 +27,25 @@ python3 -m pip install -U async_pokepy
 py -3 -m pip install -U async_pokepy
 ```
 
-To install the development version, do the following:
+To install the development version, do the this instead:
 
 ```sh
 git clone https://github.com/PendragonLore/async_pokepy.git
 cd async_pokepy
-python3 -m pip install -U .[lru,...]
+python3 -m pip install -U .
 ```
 
 ### Better caching
 
-It's recommended to install the library with [lru-dict](https://pypi.org/project/lru-dict/), you can do this with this command:
+It's recommended to install the library with [lru-dict](https://pypi.org/project/lru-dict/), to do so, run the follwing command:
 
 ``pip install async_pokepy[lru]``
 
-A warning will be thrown if you try to use it without this extra package.
+A warning will be thrown if the wrapper is used without this extra package.
 
 ### Documentation building, linting and tests
 
-If you also want to be able to run the tests/lint install it with:
+To run tests/lint install it with:
 
 ``pip install async_pokepy[tests]``
 
@@ -64,7 +64,7 @@ import async_pokepy
 
 
 async def main(query):
-    client = await async_pokepy.Client.connect()
+    client = await async_pokepy.connect()
 
     pokemon = await client.get_pokemon(query)
 
@@ -80,5 +80,5 @@ loop.run_until_complete(main("Snorlax"))
 
 This will output: "Snorlax has the abilities Gluttony, Thick Fat, Immunity".
 
-You can check out more examples in the [example](https://github.com/PendragonLore/async_pokepy/tree/master/example)
+More examples are available in the [example](https://github.com/PendragonLore/async_pokepy/tree/master/example)
 folder in the github repository or in the [introduction section of the docs](https://async-pokepy.readthedocs.io/en/master/introduction.html).
