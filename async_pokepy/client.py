@@ -43,7 +43,7 @@ def connect(base="https://pokeapi.co/api/v2/", **kwargs):
 
     .. code-block:: python3
 
-        async with async_pokepy.connect():
+        async with async_pokepy.connect() as client:
             # do stuff
 
     and this

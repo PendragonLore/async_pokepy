@@ -27,7 +27,6 @@ since the wrapper's initial release.
 
 - Hotfixes for :class:`AsyncPaginationIterator` mostly.
 
-
 0.1.3a
 ------
 
@@ -39,7 +38,6 @@ since the wrapper's initial release.
   instead of a :class:`tuple`.
 - :class:`MachineVersionDetail` for :class:`Move`
 - :class:`Berry` objects.
-
 
 0.1.2a
 ------

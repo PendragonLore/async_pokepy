@@ -6,7 +6,7 @@ Introduction
 Installing
 ----------
 
-The wrapper **requires** Python 3.5.3.
+The wrapper **requires** Python 3.5.3+ and `aiohttp <https://aiohttp.readthedocs.io/en/stable/>`_ 3.3.0+.
 
 Since the library is available on `PyPi <https://pypi.org/project/async-pokepy/>`_
 it is really easy to install by running this command:
