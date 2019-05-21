@@ -39,7 +39,7 @@ def connect(base="https://pokeapi.co/api/v2/", **kwargs):
 
     You **must** use this method to connect.
 
-    This return a context manager mixin so you can do both this:
+    This returns a context manager mixin so you can do both this:
 
     .. code-block:: python3
 
