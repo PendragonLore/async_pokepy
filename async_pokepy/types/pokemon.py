@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 """
 
 from .abc import BaseObject
-from .common import NamedAPIObject, VersionGameIndex
+from .common import NamedAPIObject, VersionGameIndex, Name
 
 __all__ = (
     "Pokemon",
@@ -36,7 +36,9 @@ __all__ = (
     "PokemonMove",
     "PokemonMoveVersion",
     "PokemonHeldItem",
-    "PokemonHeldItemVersion"
+    "PokemonHeldItemVersion",
+    "PokemonColor",
+    "PokemonHabitat"
 )
 
 
@@ -120,9 +122,6 @@ class Pokemon(BaseObject):
         self.stats = [PokemonStat(d) for d in data["stats"]]
         self.held_items = [PokemonHeldItem(d) for d in data["held_items"]]
         self.game_indices = [VersionGameIndex(d) for d in data["game_indices"]]
-
-    def __repr__(self) -> str:
-        return "<Pokemon id={0.id} name='{0}'>".format(self)
 
 
 class PokemonStat:
@@ -371,3 +370,87 @@ class PokemonHeldItemVersion:
 
     def __repr__(self) -> str:
         return "<PokemonHeldItemVersion version={0.version} rarity={0.rarity}>".format(self)
+
+
+class PokemonColor(BaseObject):
+    """Represents the color of a :class:`Pokemon` used for sorting one in a Pokédex.
+
+    .. versionadded:: 0.1.7a
+
+    .. container:: operations
+
+        .. describe:: str(x)
+
+            Returns the color's name.
+
+        .. describe:: x[y]
+
+            Returns a color's y attribute.
+
+        .. describe:: x == y
+
+            Check if two colors are the same.
+
+        .. describe:: x != y
+
+            Check if two colors are *not* the same.
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The identifier for the color.
+    name: :class:`str`
+        The name of the color.
+    names: List[:class:`Name`]
+        The names of the color listed in different languages.
+    pokemon_species: :class:`NamedAPIObject`
+        A list of the Pokémon species that have the color."""
+    __slots__ = ("names", "pokemon_species")
+
+    def __init__(self, data: dict):
+        super().__init__(data)
+
+        self.names = [Name(d) for d in data["names"]]
+        self.pokemon_species = [NamedAPIObject(d) for d in data["pokemon_species"]]
+
+
+class PokemonHabitat(BaseObject):
+    """Represents an habitat of a :class:`Pokemon`.
+
+    .. versionadded:: 0.1.7a
+
+    .. container:: operations
+
+        .. describe:: str(x)
+
+            Returns the habitat's name.
+
+        .. describe:: x[y]
+
+            Returns a habitat's y attribute.
+
+        .. describe:: x == y
+
+            Check if two habitats are the same.
+
+        .. describe:: x != y
+
+            Check if two habitats are *not* the same.
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The identifier for the habita.
+    name: :class:`str`
+        The name of the habitat.
+    names: List[:class:`Name`]
+        The names of the habitat listed in different languages.
+    pokemon_species: List[:class:`NamedAPIObject`]
+        A list of the Pokémon species that can be found in the habitat."""
+    __slots__ = ("names", "pokemon_species")
+
+    def __init__(self, data: dict):
+        super().__init__(data)
+
+        self.names = [Name(d) for d in data["names"]]
+        self.pokemon_species = [NamedAPIObject(d) for d in data["pokemon_species"]]

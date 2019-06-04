@@ -92,6 +92,20 @@ Pokemon
 .. autoclass:: PokemonHeldItemVersion()
     :members:
 
+Color
+*****
+
+.. autoclass:: PokemonColor()
+    :members:
+    :inherited-members:
+
+Habitat
+*******
+
+.. autoclass:: PokemonHabitat()
+    :members:
+    :inherited-members:
+
 Move
 ~~~~
 

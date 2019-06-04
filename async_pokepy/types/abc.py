@@ -80,9 +80,8 @@ class UnNamedBaseObject(metaclass=abc.ABCMeta):
     def __ne__(self, other) -> bool:
         return not self.__eq__(other)
 
-    @abc.abstractmethod
-    def __repr__(self) -> NotImplemented:
-        return NotImplemented
+    def __repr__(self) -> str:
+        return "<{0.__class__.__name__} id={0.id}>".format(self)
 
     def to_dict(self) -> dict:
         """Returns the raw data of the object as a :class:`dict`.
@@ -143,9 +142,8 @@ class BaseObject(UnNamedBaseObject, metaclass=abc.ABCMeta):
     def __str__(self) -> str:
         return self.name
 
-    @abc.abstractmethod
-    def __repr__(self) -> NotImplemented:
-        return NotImplemented
+    def __repr__(self) -> str:
+        return "<{0.__class__.__name__} id={0.id} name='{0}'>".format(self)
 
 
 class AsyncIterator(metaclass=abc.ABCMeta):
@@ -250,7 +248,8 @@ class AsyncIterator(metaclass=abc.ABCMeta):
         :class:`list`
             The list of similar results found, that might be empty.
             If a full match is found it will return a list with only that item.
-            The list is sorted by similarity."""
+            The list is sorted by similarity.
+        """
         similar = []
 
         while True:

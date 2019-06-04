@@ -145,9 +145,6 @@ class Move(BaseObject):
         self.past_values = [PastMoveStatValues(d) for d in data["past_values"]]
         self.machines = [MachineVersionDetail(d) for d in data["machines"]]
 
-    def __repr__(self) -> str:
-        return "<Move id={0.id} name='{0}'>".format(self)
-
 
 class MoveFlavorText:
     """Represents the flavor text of a move associated with a language.

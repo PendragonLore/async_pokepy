@@ -126,6 +126,12 @@ class HTTPPokemonClient:
     def get_pokemon(self, query: Union[int, str]) -> Coroutine:
         return self.request(Route(self.base, "pokemon", query))
 
+    def get_pokemon_color(self, query: Union[int, str]) -> Coroutine:
+        return self.request(Route(self.base, "pokemon-color", query))
+
+    def get_pokemon_habitat(self, query: Union[int, str]) -> Coroutine:
+        return self.request(Route(self.base, "pokemon-habitat", query))
+
     def get_move(self, query: Union[int, str]) -> Coroutine:
         return self.request(Route(self.base, "move", query))
 

@@ -1,0 +1,22 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+aiohttp = ">=3.3.0,<3.6.0"
+pylint = "*"
+flake8 = "*"
+pytest = "*"
+pytest-cov = "*"
+sphinx = "==1.7.4"
+sphinxcontrib-asyncio = "*"
+isort = "*"
+lru-dict = "*"
+
+[packages]
+aiohttp = "<3.6.0,>=3.3.0"
+async-pokepy = {extras = ["docs", "lru", "tests"],path = "."}
+
+[requires]
+python_version = "3.7"

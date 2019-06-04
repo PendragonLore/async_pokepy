@@ -94,9 +94,6 @@ class Ability(BaseObject):
         self.flavor_text_entries = [AbilityFlavorText(d) for d in data["flavor_text_entries"]]
         self.pokemon = [AbilityPokemon(d) for d in data["pokemon"]]
 
-    def __repr__(self) -> str:
-        return "<Ability id={0.id} name='{0}'>".format(self)
-
 
 class AbilityEffectChange:
     """Represents a past change of the effect of a move in a version group.

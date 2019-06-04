@@ -75,6 +75,3 @@ class Machine(UnNamedBaseObject):
 
     def __str__(self) -> str:
         return str(self.item)
-
-    def __repr__(self) -> str:
-        return "<Machine id={0.id} item={0.item} move={0.move}>".format(self)

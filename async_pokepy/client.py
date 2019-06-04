@@ -28,7 +28,7 @@ import io
 from typing import Union
 
 from .http import HTTPPokemonClient
-from .types import Ability, AsyncPaginationIterator, Berry, Machine, Move, Pokemon
+from .types import Ability, AsyncPaginationIterator, Berry, Machine, Move, Pokemon, PokemonColor, PokemonHabitat
 from .utils import cached
 
 __all__ = ("connect",)
@@ -81,6 +81,8 @@ def connect(base="https://pokeapi.co/api/v2/", **kwargs):
 
 
 class _ClientContextMixin:
+    __slots__ = ("_base", "_kwargs", "_client")
+
     def __init__(self, base, **kwargs):
         self._base = base
         self._kwargs = kwargs
@@ -238,7 +240,7 @@ class Client:
         Parameters
         ----------
         query: Union[:class:`int`, :class:`str`]
-            The name or id of the berryr.
+            The name or id of the berry.
 
         Raises
         ------
@@ -256,6 +258,72 @@ class Client:
         data = await self._http.get_berry(query)
 
         ret = Berry(data)
+
+        return ret
+
+    @cached(128)
+    async def get_pokemon_color(self, query: Union[int, str]) -> PokemonColor:
+        """Get a :class:`PokemonColor` from the API.
+        The query can be both the name or the ID as a string or integer.
+
+        The color will be cached.
+
+        .. versionadded:: 0.1.7a
+
+        Parameters
+        ----------
+        query: Union[:class:`int`, :class:`str`]
+            The name or id of the color.
+
+        Raises
+        ------
+        PokeAPIException
+            The request failed.
+        NotFound
+            The color was not found.
+        RateLimited
+            More then 100 requests in one minute.
+
+        Returns
+        -------
+        :class:`PokemonColor`
+            The color searched for."""
+        data = await self._http.get_pokemon_color(query)
+
+        ret = PokemonColor(data)
+
+        return ret
+
+    @cached(128)
+    async def get_pokemon_habitat(self, query: Union[int, str]) -> PokemonHabitat:
+        """Get a :class:`PokemonHabitat` from the API.
+        The query can be both the name or the ID as a string or integer.
+
+        The habitat will be cached.
+
+        .. versionadded:: 0.1.7a
+
+        Parameters
+        ----------
+        query: Union[:class:`int`, :class:`str`]
+            The name or id of the habotat.
+
+        Raises
+        ------
+        PokeAPIException
+            The request failed.
+        NotFound
+            The habitat was not found.
+        RateLimited
+            More then 100 requests in one minute.
+
+        Returns
+        -------
+        :class:`PokemonHabitat`
+            The habitat searched for."""
+        data = await self._http.get_pokemon_habitat(query)
+
+        ret = PokemonHabitat(data)
 
         return ret
 

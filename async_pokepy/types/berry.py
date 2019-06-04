@@ -99,9 +99,6 @@ class Berry(BaseObject):
 
         self.flavors = [BerryFlavorMap(d) for d in data["flavors"]]
 
-    def __repr__(self) -> str:
-        return "<Berry id={0.id} name='{0}'".format(self)
-
 
 class BerryFlavorMap:
     """Represents a map composed of a berry flavor and his potency.
