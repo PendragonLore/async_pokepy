@@ -1,3 +1,7 @@
+# DEPRECATED
+
+I don't really feel like working on this wrapper anymore, it was a decent learning experience but other then that I find it pretty boring overall to work on it, sorry.
+
 # ![Logo](https://i.imgur.com/HbPBYwf.png) async_pokepy
 
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/async_pokepy.svg)](https://pypi.python.org/pypi/async-pokepy/)
